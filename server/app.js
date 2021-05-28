@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 连接数据库
 mongodbConnect();
 // 初始化所有路由
-route(app);
+app.use(route);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
