@@ -1,4 +1,4 @@
 const config = {
-    serverAddress: 'http://127.0.0.1'
+    serverAddress: 'http://localhost:3000'
 }
 export default config;

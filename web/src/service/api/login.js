@@ -1,4 +1,4 @@
-import axiosService from "./axios-request";
+import axiosService from "../index";
 // 下面是POST形式
 export const userLogin = data => {
     return axiosService({
