@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors'); // 跨域處理
 
 const bodyParser = require('body-parser'); // 处理post请求中间件
 const mongodbConnect = require('./database/connect'); // 数据库连接文件
@@ -10,6 +11,7 @@ const router = require('./routes/route'); // 引入router模块
 
 const app = express();
 
+app.use(cors()); // 解決跨域
 // 处理post请求
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -28,17 +30,6 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 解决跨域等问题
-app.all('*', function (req, res, next) {
-  //设为指定的域
-  res.header('Access-Control-Allow-Origin', "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header("X-Powered-By", ' 3.2.1');
-  next();
-});
 // 连接数据库
 mongodbConnect();
 // 初始化所有路由
