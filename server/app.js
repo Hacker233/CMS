@@ -9,6 +9,11 @@ const bodyParser = require("body-parser"); // 处理post请求中间件
 const mongodbConnect = require("./database/connect"); // 数据库连接文件
 const router = require("./routes/route"); // 引入router模块
 const resextra = require("./utils/unifyResFormat"); // 格式化返回数据
+const tokenSetAndVer = require("./utils/auth"); // 校验token
+const expressJWT = require('express-jwt');
+const signkey = "ewgfvwergvwsgw5454gsrgvsvsd";
+
+
 
 const app = express();
 
@@ -22,8 +27,8 @@ app.use(
 );
 
 // view engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "jade");
+// app.set("views", path.join(__dirname, "views"));
+// app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -34,6 +39,31 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+
+// 解析token获取用户信息
+app.use(function(req, res, next) {
+	let token = req.headers['authorization'];
+	if(token == undefined){
+		return next();
+	}else{
+		tokenSetAndVer.verToken(token).then((data)=> {
+			req.data = data;
+			return next();
+		}).catch((error)=>{
+			return next();
+		})
+	}
+});
+
+//验证token是否过期并规定哪些路由不用验证
+app.use(expressJWT({
+	secret: signkey,
+  algorithms: ['HS256']
+}).unless({
+	path: ['/login']//除了这个地址，其他的URL都需要验证
+}));
+
 
 // 连接数据库
 mongodbConnect();

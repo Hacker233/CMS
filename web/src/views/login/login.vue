@@ -3,38 +3,67 @@
     <div class="box-card">
       <div class="logo"></div>
       <div class="register-box">
-        <el-input placeholder="请输入用户名" v-model="formRegister.username">
-          <template slot="prepend"
-            ><i class="el-icon-user-solid"></i>
-          </template>
-        </el-input>
-        <el-input
-          placeholder="请输入密码"
-          v-model="formRegister.password"
-          type="password"
-        >
-          <template slot="prepend"
-            ><i class="el-icon-s-opportunity"></i>
-          </template>
-        </el-input>
-        <el-input
-          placeholder="请确认密码"
-          v-model="formRegister.checkPass"
-          type="password"
-        >
-          <template slot="prepend"
-            ><i class="el-icon-s-opportunity"></i>
-          </template>
-        </el-input>
-        <el-checkbox v-model="checked">勾选《同意用户协议》</el-checkbox>
-        <el-button
-          type="primary"
-          class="register-button"
-          @click="register"
-          :disabled="disabled"
-          >注册</el-button
-        >
-        <a href="#">已有账号？立即登录</a>
+        <!-- 注册 -->
+        <template v-if="isLogin">
+          <el-input placeholder="请输入用户名" v-model="formRegister.username">
+            <template slot="prepend"
+              ><i class="el-icon-user-solid"></i>
+            </template>
+          </el-input>
+          <el-input
+            placeholder="请输入密码"
+            v-model="formRegister.password"
+            type="password"
+          >
+            <template slot="prepend"
+              ><i class="el-icon-s-opportunity"></i>
+            </template>
+          </el-input>
+          <el-input
+            placeholder="请确认密码"
+            v-model="formRegister.checkPass"
+            type="password"
+          >
+            <template slot="prepend"
+              ><i class="el-icon-s-opportunity"></i>
+            </template>
+          </el-input>
+          <el-checkbox v-model="checked">勾选《同意用户协议》</el-checkbox>
+          <el-button
+            type="primary"
+            class="register-button"
+            @click="register"
+            :disabled="regsiterDisabled"
+            >注册</el-button
+          >
+          <a href="#" @click="toLogin">已有账号？立即登录</a>
+        </template>
+        <!-- 登录 -->
+        <template v-else>
+          <h1 class="login-title">账号登录</h1>
+          <el-input placeholder="请输入用户名" v-model="formLogin.username">
+            <template slot="prepend"
+              ><i class="el-icon-user-solid"></i>
+            </template>
+          </el-input>
+          <el-input
+            placeholder="请输入密码"
+            v-model="formLogin.password"
+            type="password"
+          >
+            <template slot="prepend"
+              ><i class="el-icon-s-opportunity"></i>
+            </template>
+          </el-input>
+          <el-button
+            type="primary"
+            class="register-button"
+            @click="register"
+            :disabled="loginDisabled"
+            >登录</el-button
+          >
+          <a href="#" @click="toLogin">没有账号？去注册</a>
+        </template>
       </div>
     </div>
   </div>
@@ -44,6 +73,7 @@ import { userRegister } from "@/service/api/user";
 export default {
   data() {
     return {
+      isLogin: true,
       checked: "",
       formLogin: {
         username: "",
@@ -58,7 +88,7 @@ export default {
   },
   computed: {
     // 注册按钮是否可用
-    disabled() {
+    regsiterDisabled() {
       if (
         this.formRegister.username === "" ||
         this.formRegister.password === "" ||
@@ -71,6 +101,16 @@ export default {
         return false;
       }
     },
+    loginDisabled(){
+      if (
+        this.formLogin.username === "" ||
+        this.formLogin.password === "" 
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   },
   mounted() {},
   methods: {
@@ -83,8 +123,9 @@ export default {
       const data = await userRegister(params);
       console.log(data);
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
+    // 登录注册切换
+    toLogin() {
+      this.isLogin = !this.isLogin;
     },
   },
 };
@@ -128,6 +169,10 @@ export default {
       }
       .register-button {
         width: 100%;
+      }
+      .login-title {
+        margin: 0 auto;
+        font-size: 20px;
       }
     }
   }
