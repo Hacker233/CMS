@@ -1,21 +1,21 @@
-const mongoose = require('mongoose');
-const user = require('../../routes/login');
-const autoIncrement = require('mongoose-auto-increment');
+const mongoose = require("mongoose");
+const user = require("../../routes/user");
+const bcryptjs = require('bcryptjs');
+
 const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true
+  username: {
+    type: String,
+    unique: true, //字段是否唯一
+    required: true,
+  },
+  password: {
+    type: String,
+    set(val){
+        // 通过bcryptjs对密码加密返回值 第一个值返回值， 第二个密码强度
+        return bcryptjs.hashSync(val,10)
     },
-    password: {
-        type: String,
-        required: true
-    }
+    required: true,
+  },
 });
-// 自增 ID 插件配置
-userSchema.plugin(autoIncrement.plugin, {
-	model: 'User',
-	field: 'id',
-	startAt: 1,
-	incrementBy: 1,
-});
-module.exports = mongoose.model('User', schema, 'user');
+
+module.exports = mongoose.model("User", userSchema, "user");
