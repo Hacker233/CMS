@@ -1,7 +1,6 @@
 const User = require("../database/models/user"); // 模型
 const tokenSetAndVer = require("../utils/auth"); // 设置token和校验token
 const bcryptjs = require("bcryptjs");
-const SECRET = "ewgfvwergvwsgw5454gsrgvsvsd";
 
 const user = {
   login: async (req, res) => {

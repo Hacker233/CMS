@@ -117,8 +117,8 @@ export default {
     // 注册用户
     async register() {
       let params = {
-        username: this.formLogin.username,
-        password: this.formLogin.password,
+        username: this.formRegister.username,
+        password: this.formRegister.password,
       };
       const data = await userRegister(params);
       console.log(data);

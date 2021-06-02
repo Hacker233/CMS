@@ -14,9 +14,11 @@ const expressJWT = require("express-jwt"); // 校验token过期时间以及不�
 const tokenConfig = require("./config/index");
 const app = express();
 
-app.use(cors({
-  exposeHeaders: ['Authorization']
-})); // 解決跨域
+app.use(
+  cors({
+    exposeHeaders: ["Authorization"],
+  })
+); // 解決跨域
 // 处理post请求
 app.use(bodyParser.json());
 app.use(
@@ -67,7 +69,7 @@ app.use(
     secret: tokenConfig.SCRECT,
     algorithms: ["HS256"],
   }).unless({
-    path: ["/user/login", "/user/register"], // 无需验证token
+    path: ["/user/login", "/user/register", "/menu"], // 无需验证token
   })
 );
 

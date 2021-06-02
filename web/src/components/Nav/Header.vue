@@ -19,13 +19,27 @@
   </header>
 </template>
 <script>
+import { menuList } from "@/service/api/header";
 export default {
   data() {
     return {
       activeIndex: "1",
+      menuList: []
     };
   },
+  mounted(){
+    this.init();
+  },
   methods: {
+    // 初始化导航菜单
+    async init(){
+      const data = await menuList();
+      if(data.code === "00000") {
+        this.menuList = data.data;
+      } else {
+        this.$message.error(data.message);
+      }
+    },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
