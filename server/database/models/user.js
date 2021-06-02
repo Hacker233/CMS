@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const user = require("../../routes/user");
 const bcryptjs = require('bcryptjs');
+const autoIncrement = require('mongoose-auto-increment');
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -16,6 +16,17 @@ const userSchema = new mongoose.Schema({
     },
     required: true,
   },
+  uid: {
+    type: Number,
+    require: true
+  }
 });
-
+// 自增 ID 插件配置
+autoIncrement.initialize(mongoose.connection);
+userSchema.plugin(autoIncrement.plugin, {
+  model: 'userSchema',
+  field: 'uid',
+  startAt: 1,
+  incrementBy: 1,
+});
 module.exports = mongoose.model("User", userSchema, "user");

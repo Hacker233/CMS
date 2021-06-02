@@ -58,7 +58,7 @@
           <el-button
             type="primary"
             class="register-button"
-            @click="register"
+            @click="userLogin"
             :disabled="loginDisabled"
             >登录</el-button
           >
@@ -69,7 +69,7 @@
   </div>
 </template>
 <script>
-import { userRegister } from "@/service/api/user";
+import { userRegister,userLogin } from "@/service/api/user";
 export default {
   data() {
     return {
@@ -117,10 +117,19 @@ export default {
     // 注册用户
     async register() {
       let params = {
+        username: this.formLogin.username,
+        password: this.formLogin.password,
+      };
+      const data = await userRegister(params);
+      console.log(data);
+    },
+    // 登录
+    async userLogin(){
+      let params = {
         username: this.formRegister.username,
         password: this.formRegister.password,
       };
-      const data = await userRegister(params);
+      const data = await userLogin(params);
       console.log(data);
     },
     // 登录注册切换

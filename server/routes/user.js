@@ -25,6 +25,7 @@ const user = {
     }
     // 生成token
     const token = await tokenSetAndVer.setToken(user.username);
+    res.setHeader('Authorization',"Bearer " + token);
     let responseData = res.setUnifyResFormat(
       { username: user.username, token: "Bearer " + token },
       "00000",
@@ -63,6 +64,11 @@ const user = {
         });
       }
     );
+  },
+
+  // 测试
+  test: async (req, res) => {
+    res.json(res.setUnifyResFormat('', "00000", "token验证通过"));
   },
 };
 module.exports = user;

@@ -1,5 +1,5 @@
 const User = require("../database/models/user");
-const signkey = "ewgfvwergvwsgw5454gsrgvsvsd";
+const tokenConfig = require("../config/index");
 const jwt = require("jsonwebtoken");
 
 const tokenSetAndVer = {
@@ -8,9 +8,9 @@ const tokenSetAndVer = {
     return new Promise((resolve, reject) => {
       const token = jwt.sign(
         {
-          name: username
+          name: username,
         },
-        signkey,
+        tokenConfig.SCRECT,
         { expiresIn: "24h" }
       );
       resolve(token);
@@ -19,8 +19,16 @@ const tokenSetAndVer = {
   // 校验token
   verToken: (token) => {
     return new Promise((resolve, reject) => {
-      let info = jwt.verify(token.split(" ")[1], signkey);
-      resolve(info);
+      if (!token) {
+        console.log("token是空的");
+        reject({
+          error: "token 是空的",
+        });
+      } else {
+        //第二种  改版后的
+        var info = jwt.verify(token.split(" ")[1], jwtScrect);
+        resolve(info); //解析返回的值（sign 传入的值）
+      }
     });
   },
 };

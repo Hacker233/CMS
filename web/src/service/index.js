@@ -1,25 +1,26 @@
 import axios from "axios";
 import env from "../config/index";
+import store from "../store";
 
 // 创建一个axios实例
 const axiosService = axios.create({
   baseURL: env.serverAddress, // url = base url + request url
   timeout: 10000, // 设置超时时间为5s
   headers: {
-    'dataType': 'application/json'
-  }
+    dataType: "application/json",
+  },
 });
 
 // 将token加在headers上
 axiosService.interceptors.request.use(
   (config) => {
     // 设置请求类型
-    config.headers['Content-Type'] = config.headers['dataType'];
-    if (env.useTokenAuthentication) {
+    config.headers["Content-Type"] = config.headers["dataType"];
+    if (env.useTokenAuthentication && localStorage.getItem("token")) {
       config.headers.Authorization = localStorage.getItem("token");
-      console.log(config)
       return Promise.resolve(config);
     }
+    return config;
   },
   (error) => {
     return Promise.reject(error);
@@ -43,6 +44,12 @@ axiosService.interceptors.response.use(
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {
+      // 存储token到本地
+      const token = response.headers.authorization;
+      console.log(response)
+      if (token) {
+        store.commit("setAuthorization", token);
+      }
       return Promise.resolve(response);
     } else {
       return Promise.reject(response);

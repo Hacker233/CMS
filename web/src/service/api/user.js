@@ -1,14 +1,7 @@
 import axiosService from "../index";
-// 下面是POST形式
+// 登录
 export const userLogin = (data) => {
-  return axiosService({
-    url: "/login",
-    method: "post",
-    headers: {
-      "Content-type": "123",
-    },
-    data,
-  });
+  return axiosService.post("/user/login", data);
 };
 
 // 注册用户

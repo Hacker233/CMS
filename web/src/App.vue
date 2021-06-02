@@ -14,5 +14,10 @@ export default {
 </script>
 
 <style>
-
+#app {
+  height: 100vh;
+  width: 100vw;
+  min-width: 1200px;
+  background-color: rgb(230, 230, 230);
+}
 </style>

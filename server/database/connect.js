@@ -6,8 +6,10 @@ const {
 // 连接数据库
 module.exports = () => {
     mongoose.connect(DB_URL, {
+        useCreateIndex: true,
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false,
     }, (err) => {
         if (err) {
             console.log(err)
@@ -15,7 +17,5 @@ module.exports = () => {
             console.log('数据库连接成功');
         }
     });
-    // 自增 ID 初始化
-    mongoose.set('useCreateIndex', true);
 	autoIncrement.initialize(mongoose.connection)
 }
