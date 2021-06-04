@@ -1,6 +1,7 @@
 import axios from "axios";
 import env from "../config/index";
 import store from "../store";
+import { Message } from "element-ui";
 
 // 创建一个axios实例
 const axiosService = axios.create({
@@ -46,17 +47,19 @@ axiosService.interceptors.response.use(
     if (response.status === 200) {
       // 存储token到本地
       const token = response.headers.authorization;
-      console.log(response)
       if (token) {
         store.commit("setAuthorization", token);
       }
-      return Promise.resolve(response);
+      return Promise.resolve(response.data);
     } else {
       return Promise.reject(response);
     }
   },
   (error) => {
-    if (error.response.status) {
+    let err = error.response;
+    if (!err) {
+      Message.error("网络连接失败！");
+    } else {
       return Promise.reject(error.response.status);
     }
   }

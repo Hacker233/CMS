@@ -3,8 +3,10 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 const Index = () => import("@/views/index/index.vue"); // 首页
 const Login = () => import("@/views/login/login.vue"); // 登录页
+const ArticleDetails = () => import("@/views/articleDetails/index.vue"); // 文章详情页
 
 const routes = [
+  // 首页
   {
     path: "/",
     name: "index",
@@ -13,6 +15,7 @@ const routes = [
     },
     component: Index,
   },
+  // 登录页
   {
     path: "/login",
     name: "login",
@@ -20,6 +23,15 @@ const routes = [
       auth: false, // 是否需要token验证
     },
     component: Login,
+  },
+  // 文章详情页
+  {
+    path: "/articleDetails",
+    name: "articleDetails",
+    meta: {
+      auth: false,
+    },
+    component: ArticleDetails, // 文章详情页
   },
 ];
 

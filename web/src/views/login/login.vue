@@ -141,12 +141,14 @@ export default {
 </script>
 <style lang="less" scoped>
 .login-box {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   background-color: #eee;
   display: flex;
   justify-content: center;
-  align-items: center;
+  padding: 90px 0 0 0;
+  flex: 1 0 auto;
+  box-sizing: border-box;
   .box-card {
     width: 400px;
     height: 500px;
