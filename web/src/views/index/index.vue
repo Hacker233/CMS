@@ -45,7 +45,6 @@ export default {
     justify-content: space-between;
     .left {
       width: 840px;
-      background-color: #eee;
       .carousel {
         margin: 0 0 30px 0;
       }

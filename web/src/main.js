@@ -4,7 +4,7 @@ import router from "./router";
 import store from "./store";
 import "./plugins/element.js";
 import "./theme/index.css"; // 主题
-import "normalize.css/normalize.css";
+import "./assets/css/reset.css";
 import "./common/auth"; // 权限检测
 
 Vue.config.productionTip = false;
