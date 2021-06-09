@@ -42,21 +42,41 @@
         </el-menu>
       </div>
       <div class="login-btn">
-        <el-button type="text" @click="toLogin">登录/注册</el-button>
+        <el-button v-if="!userInfo" type="text" @click="openLoginDialog"
+          >登录/注册</el-button
+        >
+        <el-dropdown v-else>
+          <el-avatar
+            :src="userInfo.avatar"
+          ></el-avatar>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>个人中心</el-dropdown-item>
+            <el-dropdown-item @click.native="loginOut">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </nav>
+    <login-dialog :visible="visible" @closeDialog="closeDialog" @loginClose="loginClose" @registerClose="registerClose"></login-dialog>
   </header>
 </template>
 <script>
+import LoginDialog from "../LoginDialog/LoginDialog.vue";
 import { menuList } from "@/service/api/header";
+import { getUserInfo } from "@/service/api/user";
 export default {
   data() {
     return {
       menu: [],
+      userInfo: '',
+      visible: false,
     };
+  },
+  components: {
+    LoginDialog,
   },
   mounted() {
     this.init();
+    this.getUserInfo();
   },
   methods: {
     // 初始化导航菜单
@@ -71,11 +91,37 @@ export default {
         });
       }
     },
-    // 跳转登录
-    toLogin() {
-      this.$router.push({
-        name: "login",
-      });
+    // 查询用户信息
+    async getUserInfo(){
+      const data = await getUserInfo();
+      if (data.code === "00000") {
+        this.userInfo = data.data;
+      } else {
+        this.userInfo = '';
+      }
+    },
+    // 打开登录注册弹窗
+    openLoginDialog() {
+      this.visible = true;
+    },
+    // 关闭登录弹窗
+    closeDialog() {
+      this.visible = false;
+    },
+    // 登录回调
+    loginClose(){
+      this.visible = false;
+      this.getUserInfo();
+    },
+    // 注册回调
+    registerClose(){
+      this.visible = false;
+      this.getUserInfo();
+    },
+    // 退出登录
+    loginOut(){
+      localStorage.removeItem("token");
+      this.getUserInfo();
     },
     handleSelect(key, keyPath) {
       this.activeIndex = key;

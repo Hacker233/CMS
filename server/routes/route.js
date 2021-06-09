@@ -3,9 +3,10 @@ const router = express.Router();
 const user = require("./user");
 const menu = require("./menu");
 
-// 登录、注册、注销
+// 用户相关路由
 router.post("/user/login", user.login);
 router.post("/user/register", user.register);
+router.get("/user/userInfo", user.userInfo);
 
 // 获取菜单
 router.get("/menu", menu.menu);

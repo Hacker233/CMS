@@ -45,10 +45,14 @@ axiosService.interceptors.response.use(
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {
-      // 存储token到本地
-      const token = response.headers.authorization;
-      if (token) {
-        store.commit("setAuthorization", token);
+      if (response.data.code === "T0001") {
+        localStorage.removeItem("token");
+      } else {
+        // 存储token到本地
+        const token = response.headers.authorization;
+        if (token) {
+          store.commit("setAuthorization", token);
+        }
       }
       return Promise.resolve(response.data);
     } else {

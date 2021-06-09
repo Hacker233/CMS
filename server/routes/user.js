@@ -3,6 +3,7 @@ const tokenSetAndVer = require("../utils/auth"); // 设置token和校验token
 const bcryptjs = require("bcryptjs");
 
 const user = {
+  // 登录
   login: async (req, res) => {
     // 查询是否有此用户
     const user = await User.findOne({
@@ -23,15 +24,10 @@ const user = {
       }
     }
     // 生成token
-    const token = await tokenSetAndVer.setToken(user.username);
-    res.setHeader('Authorization',"Bearer " + token);
-    let responseData = res.setUnifyResFormat(
-      { username: user.username, token: "Bearer " + token },
-      "00000",
-      "登录成功！"
-    );
+    const token = await tokenSetAndVer.setToken(user.uid);
+    res.setHeader("Authorization", "Bearer " + token);
     // 返回
-    res.json(responseData);
+    res.json(res.setUnifyResFormat(null, "00000", "登录成功！"));
   },
   // 注册
   register: async (req, res) => {
@@ -52,11 +48,14 @@ const user = {
           username: username,
           password: password,
         });
-        // 增加一条数据
-        user.save((err, doc) => {
+        // 保存用户
+        user.save(async (err, doc) => {
           if (err) {
             res.json(res.setUnifyResFormat("", "D0001", err));
           } else {
+            // 生成token
+            const token = await tokenSetAndVer.setToken(user.uid);
+            res.setHeader("Authorization", "Bearer " + token);
             res.json(res.setUnifyResFormat(doc, "00000", "注册成功"));
           }
           return;
@@ -65,9 +64,16 @@ const user = {
     );
   },
 
-  // 测试
-  test: async (req, res) => {
-    res.json(res.setUnifyResFormat('', "00000", "token验证通过"));
+  // 查询用户信息
+  userInfo: async (req, res) => {
+    let uid = req.data.uid;
+    User.findOne({ uid: uid }, (err, doc) => {
+      if (doc) {
+        res.json(res.setUnifyResFormat(doc, "00000", "用户信息查询成功！"));
+      } else {
+        res.json(res.setUnifyResFormat(err, "U0004", "用户信息查询失败！"));
+      }
+    });
   },
 };
 module.exports = user;

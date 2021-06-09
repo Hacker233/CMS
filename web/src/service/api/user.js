@@ -8,3 +8,8 @@ export const userLogin = (data) => {
 export const userRegister = (data) => {
   return axiosService.post("/user/register", data);
 };
+
+// 查询用户信息
+export const getUserInfo = (params) => {
+  return axiosService.get("/user/userInfo", params);
+}

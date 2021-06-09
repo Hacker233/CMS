@@ -47,8 +47,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
   // 让前端在axios中可以获取Authorization
   res.header("Access-Control-Expose-Headers", "Authorization");
-  let token = req.headers["Authorization"];
-  if (token == undefined) {
+  let token = req.headers["authorization"];
+  if (!token) {
     return next();
   } else {
     tokenSetAndVer
@@ -87,6 +87,7 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   if (err.name === "UnauthorizedError") {
+    res.status(200)
     res.json(res.setUnifyResFormat("", "T0001", "token验证失败"));
     return;
   }

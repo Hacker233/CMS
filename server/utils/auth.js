@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 
 const tokenSetAndVer = {
   // 生成token
-  setToken: (username) => {
+  setToken: (uid) => {
     return new Promise((resolve, reject) => {
       const token = jwt.sign(
         {
-          name: username,
+          uid: uid,
         },
         tokenConfig.SCRECT,
         { expiresIn: "24h" }
@@ -25,8 +25,7 @@ const tokenSetAndVer = {
           error: "token 是空的",
         });
       } else {
-        //第二种  改版后的
-        var info = jwt.verify(token.split(" ")[1], jwtScrect);
+        let info = jwt.verify(token.split(" ")[1], tokenConfig.SCRECT);
         resolve(info); //解析返回的值（sign 传入的值）
       }
     });

@@ -4,6 +4,10 @@ const autoIncrement = require("mongoose-auto-increment");
 
 const userSchema = new mongoose.Schema(
   {
+    uid: {
+      type: Number,
+      require: true,
+    },
     username: {
       type: String,
       unique: true, //字段是否唯一
@@ -17,10 +21,13 @@ const userSchema = new mongoose.Schema(
       },
       required: true,
     },
-    uid: {
-      type: Number,
-      require: true,
+    email: {
+      type: String
     },
+    avatar: {
+      type: String,
+      default: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+    }
   },
   { versionKey: false }
 );

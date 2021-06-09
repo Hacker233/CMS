@@ -80,7 +80,7 @@
   }
   .classify {
     border-top: 1px solid rgb(211, 211, 211);
-    height: 50px;
+    height: 90px;
     padding: 0 25px;
     display: flex;
     align-items: center;
