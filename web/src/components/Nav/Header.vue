@@ -46,34 +46,31 @@
           >登录/注册</el-button
         >
         <el-dropdown v-else>
-          <el-avatar
-            :src="userInfo.avatar"
-          ></el-avatar>
+          <el-avatar class="avatar" :src="userInfo.avatar"></el-avatar>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item @click.native="loginOut">退出登录</el-dropdown-item>
+            <el-dropdown-item @click.native="toPersonalCenter"
+              >个人中心</el-dropdown-item
+            >
+            <el-dropdown-item @click.native="loginOut"
+              >退出登录</el-dropdown-item
+            >
           </el-dropdown-menu>
         </el-dropdown>
       </div>
     </nav>
-    <login-dialog :visible="visible" @closeDialog="closeDialog" @loginClose="loginClose" @registerClose="registerClose"></login-dialog>
   </header>
 </template>
 <script>
-import LoginDialog from "../LoginDialog/LoginDialog.vue";
 import { menuList } from "@/service/api/header";
 import { getUserInfo } from "@/service/api/user";
 export default {
   data() {
     return {
       menu: [],
-      userInfo: '',
-      visible: false,
+      userInfo: "",
     };
   },
-  components: {
-    LoginDialog,
-  },
+  components: {},
   mounted() {
     this.init();
     this.getUserInfo();
@@ -92,34 +89,27 @@ export default {
       }
     },
     // 查询用户信息
-    async getUserInfo(){
+    async getUserInfo() {
       const data = await getUserInfo();
       if (data.code === "00000") {
         this.userInfo = data.data;
       } else {
-        this.userInfo = '';
+        this.userInfo = "";
       }
     },
+
     // 打开登录注册弹窗
     openLoginDialog() {
-      this.visible = true;
+      console.log(this)
+      this.$LoginDialog({});
     },
-    // 关闭登录弹窗
-    closeDialog() {
-      this.visible = false;
-    },
-    // 登录回调
-    loginClose(){
-      this.visible = false;
-      this.getUserInfo();
-    },
-    // 注册回调
-    registerClose(){
-      this.visible = false;
-      this.getUserInfo();
+
+    // 跳转至个人中心
+    toPersonalCenter() {
+      this.$router.push({ name: "personalCenter" });
     },
     // 退出登录
-    loginOut(){
+    loginOut() {
       localStorage.removeItem("token");
       this.getUserInfo();
     },
@@ -183,6 +173,9 @@ export default {
       display: flex;
       justify-content: flex-end;
       align-items: center;
+      .avatar {
+        cursor: pointer;
+      }
     }
   }
 }

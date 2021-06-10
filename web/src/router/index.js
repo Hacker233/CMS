@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 const Index = () => import("@/views/index/index.vue"); // 首页
 const ArticleDetails = () => import("@/views/articleDetails/index.vue"); // 文章详情页
+const PersonalCenter = () => import("@/views/personalCenter/index.vue"); // 个人中心
 
 const routes = [
   // 首页
@@ -23,6 +24,15 @@ const routes = [
     },
     component: ArticleDetails, // 文章详情页
   },
+  // 个人中心
+  {
+    path: "/personalCenter",
+    name: "personalCenter",
+    meta: {
+      auth: true,
+    },
+    component: PersonalCenter,
+  },
 ];
 
 const router = new VueRouter({
@@ -30,5 +40,4 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-
 export default router;
