@@ -100,8 +100,8 @@ export default {
 
     // 打开登录注册弹窗
     openLoginDialog() {
-      console.log(this)
-      this.$LoginDialog({});
+      // this.$LoginDialog.open();
+      this.$login()
     },
 
     // 跳转至个人中心
@@ -111,7 +111,8 @@ export default {
     // 退出登录
     loginOut() {
       localStorage.removeItem("token");
-      this.getUserInfo();
+      this.$router.push('/');
+      location.reload();
     },
     handleSelect(key, keyPath) {
       this.activeIndex = key;

@@ -1,10 +1,18 @@
 import Vue from "vue";
-import LoginDialog from "../components/LoginDialog/LoginDialog.vue";
-let LoginConstructor = Vue.extend(LoginDialog); // 返回一个“扩展实例构造器”
-let dialog = () => {
-  let dialogDom = new LoginConstructor({
-    el: document.createElement("div"), //将Alert组件挂载到新创建的div上
+import login from "../components/LoginDialog/LoginDialog.vue";
+
+const LoginDialog = Vue.extend(login);
+
+login.install = function(data) {
+  let instance = new LoginDialog({
+    data,
+  }).$mount();
+
+  document.body.appendChild(instance.$el);
+
+  Vue.nextTick(() => {
+    instance.open();
   });
-  document.body.appendChild(dialogDom.$el); //把Alert组件的dom添加到body里
 };
-export default dialog;
+
+export default login;

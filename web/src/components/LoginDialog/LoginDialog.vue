@@ -3,14 +3,17 @@
     :show-close="false"
     :append-to-body="true"
     :visible.sync="visible"
-    :before-close="handleClose"
     top="0"
     width="400px"
     custom-class="login-dialog"
+    :lock-scroll="false"
   >
     <div class="login-box">
       <div class="box-card">
         <div class="logo"></div>
+        <div class="exit">
+          <i class="el-icon-close" @click="close"></i>
+        </div>
         <div class="register-box">
           <!-- 注册 -->
           <template v-if="isLogin">
@@ -84,14 +87,9 @@
 <script>
 import { userRegister, userLogin } from "@/service/api/user";
 export default {
-  props: {
-    visible: {
-      type: Boolean,
-      default: false,
-    },
-  },
   data() {
     return {
+      visible: false,
       isLogin: true,
       checked: "",
       formLogin: {
@@ -129,8 +127,13 @@ export default {
     },
   },
   methods: {
-    handleClose(userInfo) {
-      this.$emit("closeDialog",userInfo);
+    // 打开登录弹窗
+    open() {
+      this.visible = true;
+    },
+    // 关闭登录弹窗
+    close() {
+      this.visible = false;
     },
     // 注册用户
     async register() {
@@ -141,17 +144,18 @@ export default {
       const data = await userRegister(params);
       if (data.code === "00000") {
         this.$message.success("注册成功");
-        this.$emit('registerClose');
+        location.reload();
+        this.close();
       } else {
         this.$message({
           message: data.message,
           type: "error",
         });
       }
-      console.log(data);
     },
     // 登录
     async userLogin() {
+      console.log(this);
       let params = {
         username: this.formLogin.username,
         password: this.formLogin.password,
@@ -159,7 +163,8 @@ export default {
       const data = await userLogin(params);
       if (data.code === "00000") {
         this.$message.success("登录成功");
-        this.$emit('loginClose');
+        location.reload();
+        this.close();
       } else {
         this.$message({
           message: data.message,
@@ -213,6 +218,22 @@ export default {
       top: -60px;
       left: 50%;
       transform: translate(-50%, 0%);
+    }
+    .exit {
+      height: 50px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 15px 0 0;
+      position: absolute;
+      right: 0;
+      i {
+        font-size: 20px;
+        cursor: pointer;
+        &:hover {
+          color: blue;
+        }
+      }
     }
     .register-box {
       height: 80%;

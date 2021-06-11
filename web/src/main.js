@@ -6,10 +6,10 @@ import "./plugins/element.js";
 import "./theme/index.css"; // 主题
 import "./assets/css/reset.css";
 import "./common/auth"; // 权限检测
-import LoginDialog from './common/LoginDialog'; // 登陆注册弹窗
+import login from "./common/LoginDialog"; // 登录弹窗全局组件
+Vue.prototype.$login = login.install;
 
 Vue.config.productionTip = false;
-Vue.prototype.$LoginDialog = LoginDialog;  
 
 new Vue({
   router,
