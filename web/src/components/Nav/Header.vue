@@ -93,6 +93,7 @@ export default {
       const data = await getUserInfo();
       if (data.code === "00000") {
         this.userInfo = data.data;
+        this.$store.commit("setUserInfo", this.userInfo);
       } else {
         this.userInfo = "";
       }
@@ -101,7 +102,7 @@ export default {
     // 打开登录注册弹窗
     openLoginDialog() {
       // this.$LoginDialog.open();
-      this.$login()
+      this.$login();
     },
 
     // 跳转至个人中心
@@ -111,7 +112,7 @@ export default {
     // 退出登录
     loginOut() {
       localStorage.removeItem("token");
-      this.$router.push('/');
+      this.$router.push("/");
       location.reload();
     },
     handleSelect(key, keyPath) {

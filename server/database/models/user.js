@@ -4,15 +4,18 @@ const autoIncrement = require("mongoose-auto-increment");
 
 const userSchema = new mongoose.Schema(
   {
+    // 用户id
     uid: {
       type: Number,
       require: true,
     },
+    // 用户名
     username: {
       type: String,
       unique: true, //字段是否唯一
       required: true,
     },
+    // 密码
     password: {
       type: String,
       set(val) {
@@ -21,9 +24,11 @@ const userSchema = new mongoose.Schema(
       },
       required: true,
     },
+    // 邮箱
     email: {
       type: String
     },
+    // 头像
     avatar: {
       type: String,
       default: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
