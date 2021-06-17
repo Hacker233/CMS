@@ -1,0 +1,19 @@
+{
+  "presets": [["es2015", {"loose": true}] ,"babel-preset-stage-3"],
+  "plugins": ["transform-vue-jsx",
+    ["babel-plugin-transform-es2015-template-literals", {
+      "loose": true,
+      "spec": true
+    }],
+    [
+      "transform-runtime",
+      {
+        "helpers": false,
+        "polyfill": false,
+        "regenerator": true,
+        "moduleName": "babel-runtime"
+      }
+    ],
+    "transform-remove-strict-mode"
+  ]
+}

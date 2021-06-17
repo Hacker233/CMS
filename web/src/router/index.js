@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
 const Index = () => import("@/views/index/index.vue"); // 首页
+const Category = () => import("@/views/category/index.vue"); // 分类页
 const ArticleDetails = () => import("@/views/articleDetails/index.vue"); // 文章详情页
 const PersonalCenter = () => import("@/views/personalCenter/index.vue"); // 个人中心
 
@@ -14,6 +15,14 @@ const routes = [
       auth: false, // 是否需要token验证
     },
     component: Index,
+  },
+  {
+    path: "/category",
+    name: "category",
+    meta: {
+      auth: false,
+    },
+    component: Category, // 分类页面
   },
   // 文章详情页
   {

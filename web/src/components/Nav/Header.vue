@@ -146,6 +146,7 @@ export default {
     display: flex;
     justify-content: space-between;
     .menu-list {
+      user-select: none;
       flex: auto;
       /deep/ .el-menu {
         height: 100%;

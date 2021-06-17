@@ -6,10 +6,19 @@
         <div class="carousel">
           <Carousel></Carousel>
         </div>
-        <!-- 推荐文章区域 -->
-        <div class="recommend-article">
-          <div class="card" v-for="(item, index) in 9" :key="index">
-            <article-card></article-card>
+        <!-- 推荐内容区域 -->
+        <div class="recommend-article" v-for="(item,index) in 2" :key="index">
+          <!-- 标题区域 -->
+          <type-sort title="热门视频"></type-sort>
+          <!-- 文章区域 -->
+          <div class="article-card-box" v-if="index === 0">
+            <div class="article-card-list" v-for="(item,index) in 6" :key="index"></div>
+          </div>
+          <!-- 视频区域 -->
+          <div class="video-box" v-else>
+            <div class="card" v-for="(item, index) in 9" :key="index">
+              <article-card></article-card>
+            </div>
           </div>
         </div>
       </div>
@@ -21,14 +30,16 @@
   </div>
 </template>
 <script>
-import Carousel from "./components/Carousel";
-import ArticleCard from "./components/ArticleCard";
-import UserBox from "@/components/UserBox/UserBox";
+import Carousel from "./components/Carousel"; // 轮播图组件
+import ArticleCard from "./components/ArticleCard"; // 卡片
+import UserBox from "@/components/UserBox/UserBox"; // 用户组件
+import TypeSort from "./components/TypeSort.vue";
 export default {
   components: {
     Carousel,
     UserBox,
     ArticleCard,
+    TypeSort
   },
 };
 </script>
@@ -49,11 +60,23 @@ export default {
         margin: 0 0 30px 0;
       }
       .recommend-article {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        .card {
-          margin-bottom: 20px;
+        .video-box {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          .card {
+            margin-bottom: 20px;
+          }
+        }
+        .article-card-box {
+          width: 100%;
+          .article-card-list {
+            width: 100%;
+            min-height: 120px;
+            background-color: #fff;
+            border-bottom: 1px solid #ccc;
+          }
         }
       }
     }

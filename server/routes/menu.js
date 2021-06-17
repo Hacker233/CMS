@@ -10,7 +10,7 @@ const menu = {
           res.json(res.setUnifyResFormat(err, "M0001", "导航菜单查询失败！"));
         }
       },
-    );
+    ).sort({'menu_id':1});
   },
 };
 module.exports = menu;
