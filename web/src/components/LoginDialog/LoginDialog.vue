@@ -144,7 +144,7 @@ export default {
       const data = await userRegister(params);
       if (data.code === "00000") {
         this.$message.success("注册成功");
-        location.reload();
+        this.register(data); // 登录成功回调
         this.close();
       } else {
         this.$message({
@@ -155,7 +155,6 @@ export default {
     },
     // 登录
     async userLogin() {
-      console.log(this);
       let params = {
         username: this.formLogin.username,
         password: this.formLogin.password,
@@ -163,7 +162,7 @@ export default {
       const data = await userLogin(params);
       if (data.code === "00000") {
         this.$message.success("登录成功");
-        location.reload();
+        this.login(data); // 登录成功回调
         this.close();
       } else {
         this.$message({

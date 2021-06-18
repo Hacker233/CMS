@@ -42,6 +42,14 @@
         </el-menu>
       </div>
       <div class="login-btn">
+        <el-button
+          type="primary"
+          round
+          size="small"
+          icon="el-icon-edit-outline"
+          @click="toWrite"
+          >去发布</el-button
+        >
         <el-button v-if="!userInfo" type="text" @click="openLoginDialog"
           >登录/注册</el-button
         >
@@ -64,6 +72,7 @@
 import { menuList } from "@/service/api/header";
 import { getUserInfo } from "@/service/api/user";
 export default {
+  inject:['reload'],
   data() {
     return {
       menu: [],
@@ -101,10 +110,27 @@ export default {
 
     // 打开登录注册弹窗
     openLoginDialog() {
-      // this.$LoginDialog.open();
-      this.$login();
+      this.$login({
+        login: (data) => {
+          if (data) {
+            this.refresh();
+          }
+        },
+      });
     },
-
+    // 跳转至发布页
+    toWrite() {
+      if (localStorage.getItem("token")) {
+        this.$router.push({ name: "write" });
+      } else {
+        this.$login({
+          login: () => {
+            this.refresh();
+            this.$router.push({ name: "write" });
+          },
+        });
+      }
+    },
     // 跳转至个人中心
     toPersonalCenter() {
       this.$router.push({ name: "personalCenter" });
@@ -113,12 +139,16 @@ export default {
     loginOut() {
       localStorage.removeItem("token");
       this.$router.push("/");
-      location.reload();
+      this.refresh();
     },
     handleSelect(key, keyPath) {
       this.activeIndex = key;
       console.log(key, keyPath);
     },
+    // 刷新页面,不会重载页面
+    refresh(){
+			this.reload();
+		}
   },
 };
 </script>
@@ -176,8 +206,13 @@ export default {
       display: flex;
       justify-content: flex-end;
       align-items: center;
+      /deep/ .el-button--text {
+        margin-left: 20px;
+      }
       .avatar {
         cursor: pointer;
+        margin-left: 20px;
+        border: 1px solid #ccc;
       }
     }
   }
