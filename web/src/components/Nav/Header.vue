@@ -121,12 +121,12 @@ export default {
     // 跳转至发布页
     toWrite() {
       if (localStorage.getItem("token")) {
-        this.$router.push({ name: "write" });
+        this.$router.push({ name: "writeSelect" });
       } else {
         this.$login({
           login: () => {
             this.refresh();
-            this.$router.push({ name: "write" });
+            this.$router.push({ name: "writeSelect" });
           },
         });
       }
@@ -160,7 +160,7 @@ export default {
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 999;
+  z-index: 10002;
   .logo {
     background-color: #fff;
     display: flex;
