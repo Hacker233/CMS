@@ -160,7 +160,7 @@ export default {
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 10002;
+  z-index: 999;
   .logo {
     background-color: #fff;
     display: flex;

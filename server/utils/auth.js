@@ -1,4 +1,3 @@
-const User = require("../database/models/user");
 const tokenConfig = require("../config/index");
 const jwt = require("jsonwebtoken");
 

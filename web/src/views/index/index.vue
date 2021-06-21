@@ -7,17 +7,20 @@
           <Carousel></Carousel>
         </div>
         <!-- 推荐内容区域 -->
-        <div class="recommend-article" v-for="(item,index) in 2" :key="index">
+        <div class="recommend-article" v-for="(item, index) in recommendedList" :key="index">
           <!-- 标题区域 -->
-          <type-sort title="热门视频"></type-sort>
+          <type-sort :title="item.title"></type-sort>
           <!-- 文章区域 -->
-          <div class="article-card-box" v-if="index === 0">
-            <div class="article-card-list" v-for="(item,index) in 6" :key="index"></div>
+          <div class="article-card-box" v-if="item.flag === '1'">
+            <article-list
+              v-for="(articleItem, articleIndex) in item.topArticleList"
+              :key="articleIndex"
+            ></article-list>
           </div>
           <!-- 视频区域 -->
           <div class="video-box" v-else>
             <div class="card" v-for="(item, index) in 9" :key="index">
-              <article-card></article-card>
+              <video-card></video-card>
             </div>
           </div>
         </div>
@@ -31,16 +34,37 @@
 </template>
 <script>
 import Carousel from "./components/Carousel"; // 轮播图组件
-import ArticleCard from "./components/ArticleCard"; // 卡片
+import VideoCard from "./components/VideoCard"; // 视频卡片
 import UserBox from "@/components/UserBox/UserBox"; // 用户组件
-import TypeSort from "./components/TypeSort.vue";
+import TypeSort from "./components/TypeSort.vue"; // 标题组件
+import ArticleList from "./components/ArticleList.vue"; // 文章列表
+import { recommendedList } from "@/service/api/recommended.js";
 export default {
+  data(){
+    return {
+      recommendedList: []
+    }
+  },
   components: {
     Carousel,
     UserBox,
-    ArticleCard,
-    TypeSort
+    VideoCard,
+    TypeSort,
+    ArticleList,
   },
+  mounted(){
+    this.getRecommendedList(); // 获取推荐列表
+  },
+  methods: {
+    async getRecommendedList(){
+      const data = await recommendedList();
+      if (data.code === "00000") {
+        this.recommendedList = data.data;
+      } else {
+        this.$message.error(data.message);
+      }
+    }
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -71,12 +95,6 @@ export default {
         }
         .article-card-box {
           width: 100%;
-          .article-card-list {
-            width: 100%;
-            min-height: 120px;
-            background-color: #fff;
-            border-bottom: 1px solid #ccc;
-          }
         }
       }
     }

@@ -69,7 +69,12 @@ app.use(
     secret: tokenConfig.SCRECT,
     algorithms: ["HS256"],
   }).unless({
-    path: ["/user/login", "/user/register", "/menu"], // 无需验证token
+    path: [
+      "/user/login",
+      "/user/register",
+      "/menu",
+      "/recommended/recommendedList",
+    ], // 无需验证token
   })
 );
 
@@ -87,7 +92,7 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   if (err.name === "UnauthorizedError") {
-    res.status(200)
+    res.status(200);
     res.json(res.setUnifyResFormat("", "T0001", "token验证失败"));
     return;
   }
