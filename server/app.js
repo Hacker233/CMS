@@ -4,7 +4,6 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors"); // 跨域處理
-
 const bodyParser = require("body-parser"); // 处理post请求中间件
 const mongodbConnect = require("./database/connect"); // 数据库连接文件
 const router = require("./routes/route"); // 引入router模块
@@ -74,6 +73,7 @@ app.use(
       "/user/register",
       "/menu",
       "/recommended/recommendedList",
+      "/upload"
     ], // 无需验证token
   })
 );

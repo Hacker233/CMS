@@ -11,8 +11,20 @@ const articleScheam = new mongoose.Schema({
   title: {
     type: String,
   },
+  // 文章分类
+  category: {
+    type: String,
+  },
+  // 文章类型
+  type: {
+    type: String,
+  },
   //  文章内容
   content: {
+    type: String,
+  },
+  // 封面图
+  cover: {
     type: String,
   },
   // 浏览量

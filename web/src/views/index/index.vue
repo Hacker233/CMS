@@ -15,6 +15,7 @@
             <article-list
               v-for="(articleItem, articleIndex) in item.topArticleList"
               :key="articleIndex"
+              :articleItem="articleItem"
             ></article-list>
           </div>
           <!-- 视频区域 -->
@@ -28,6 +29,7 @@
       <div class="right">
         <!-- 用户区 -->
         <user-box></user-box>
+        <upload></upload>
       </div>
     </div>
   </div>
@@ -39,6 +41,7 @@ import UserBox from "@/components/UserBox/UserBox"; // 用户组件
 import TypeSort from "./components/TypeSort.vue"; // 标题组件
 import ArticleList from "./components/ArticleList.vue"; // 文章列表
 import { recommendedList } from "@/service/api/recommended.js";
+import upload from './components/upload.vue'
 export default {
   data(){
     return {
@@ -51,6 +54,7 @@ export default {
     VideoCard,
     TypeSort,
     ArticleList,
+    upload
   },
   mounted(){
     this.getRecommendedList(); // 获取推荐列表
