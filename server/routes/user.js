@@ -1,6 +1,11 @@
 const User = require("../database/models/user"); // 模型
+const Code = require("../database/models/code");
 const tokenSetAndVer = require("../utils/auth"); // 设置token和校验token
-const bcryptjs = require("bcryptjs");
+const bcryptjs = require("bcryptjs"); // 密码加密
+
+// 邮件发送模块
+const nodemailer = require("nodemailer");
+const smtpTransport = require("nodemailer-smtp-transport");
 
 const user = {
   // 登录
@@ -32,6 +37,7 @@ const user = {
   // 注册
   register: async (req, res) => {
     const username = req.body.username;
+    const email = req.body.email;
     const password = req.body.password;
     // 查询数据库
     User.findOne(
@@ -47,6 +53,7 @@ const user = {
         let user = new User({
           username: username,
           password: password,
+          email: email,
         });
         // 保存用户
         user.save(async (err, doc) => {
@@ -74,6 +81,63 @@ const user = {
         res.json(res.setUnifyResFormat(err, "U0004", "用户信息查询失败！"));
       }
     });
+  },
+
+  // 获取邮箱验证码
+  emailCode: async (req, res) => {
+    const transport = nodemailer.createTransport(
+      smtpTransport({
+        host: "smtp.163.com", // 服务
+        port: 465, // smtp端口
+        secure: true,
+        auth: {
+          user: "lhqhacker@163.com", //用户名
+          pass: "FOFMEMXOOXULIQRM", // SMTP授权码
+        },
+      })
+    );
+    const randomFns = () => {
+      // 生成6位随机数
+      let code = "";
+      for (let i = 0; i < 6; i++) {
+        code += parseInt(Math.random() * 10);
+      }
+      return code;
+    };
+    const regEmail =
+      /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/; //验证邮箱正则
+
+    let EMAIL = req.body.email;
+    if (regEmail.test(EMAIL)) {
+      let code = randomFns();
+      transport.sendMail(
+        {
+          from: "lhqhacker@163.com", // 发件邮箱
+          to: EMAIL, // 收件列表
+          subject: "验证你的电子邮件", // 标题
+          html: `
+            <p>你好！</p>
+            <p>您正在注册Cracker社区账号</p>
+            <p>你的验证码是：<strong style="color: #ff4e2a;">${code}</strong></p>
+            <p>***该验证码5分钟内有效***</p>`, // html 内容
+        },
+        function (error, data) {
+          if (error) {
+            transport.close(); // 如果没用，关闭连接池
+          }
+        }
+      );
+      const e_mail = EMAIL;
+      await Code.deleteMany({ e_mail });
+      const [data] = await Code.insertMany({ e_mail, code: code });
+      setTimeout(async () => {
+        //5分钟后失效
+        await Code.deleteMany({ e_mail });
+      }, 1000 * 60 * 5);
+      res.json(res.setUnifyResFormat(null, "00000", "邮件发送成功"));
+    } else {
+      res.json(res.setUnifyResFormat(null, "E0001", "邮件格式错误"));
+    }
   },
 };
 module.exports = user;

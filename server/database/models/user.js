@@ -26,7 +26,8 @@ const userSchema = new mongoose.Schema(
     },
     // 邮箱
     email: {
-      type: String
+      type: String,
+      required: true,
     },
     // 头像
     avatar: {

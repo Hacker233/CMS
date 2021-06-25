@@ -11,6 +11,7 @@ const upload = require("./upload");
 router.post("/user/login", user.login);
 router.post("/user/register", user.register);
 router.get("/user/userInfo", user.userInfo);
+router.post("/user/emailCode", user.emailCode);
 
 // 获取菜单
 router.get("/menu", menu.menu);
@@ -21,7 +22,7 @@ router.get("/recommended/recommendedList", recommended.recommendedList);
 // 上传文件
 router.post(
   "/upload",
-  Multer({ dest: "./uploads/" }).single("upload"),
+  Multer({ dest: "./uploads/" }).single("file"),
   upload.upload
 );
 // 导出路由模块

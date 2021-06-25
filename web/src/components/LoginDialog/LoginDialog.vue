@@ -25,6 +25,19 @@
                 ><i class="el-icon-user-solid"></i>
               </template>
             </el-input>
+
+            <el-input placeholder="请输入邮箱" v-model="formRegister.email">
+              <template slot="prepend"
+                ><i class="el-icon-user-solid"></i>
+              </template>
+            </el-input>
+
+            <div>
+              <el-button type="primary" @click="getEmailCode"
+                >获取验证码</el-button
+              >
+            </div>
+
             <el-input
               placeholder="请输入密码"
               v-model="formRegister.password"
@@ -85,7 +98,7 @@
   </el-dialog>
 </template>
 <script>
-import { userRegister, userLogin } from "@/service/api/user";
+import { userRegister, userLogin, emailCode } from "@/service/api/user";
 export default {
   data() {
     return {
@@ -98,6 +111,7 @@ export default {
       },
       formRegister: {
         username: "",
+        email: "",
         password: "",
         checkPass: "",
       },
@@ -174,6 +188,21 @@ export default {
     // 登录注册切换
     toLogin() {
       this.isLogin = !this.isLogin;
+    },
+    // 获取邮箱验证码
+    async getEmailCode() {
+      let params = {
+        email: this.formRegister.email,
+      };
+      const data = await emailCode(params);
+      if (data.code === "00000") {
+        this.$message.success("已发送验证码！");
+      } else {
+        this.$message({
+          message: data.message,
+          type: "error",
+        });
+      }
     },
   },
 };

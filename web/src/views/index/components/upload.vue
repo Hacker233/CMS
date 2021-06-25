@@ -2,7 +2,6 @@
   <el-upload
     class="upload-demo"
     action="http://localhost:3000/upload"
-    name="upload"
     :on-preview="handlePreview"
     :on-remove="handleRemove"
     :before-remove="beforeRemove"

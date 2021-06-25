@@ -12,4 +12,9 @@ export const userRegister = (data) => {
 // 查询用户信息
 export const getUserInfo = (params) => {
   return axiosService.get("/user/userInfo", params);
-}
+};
+
+// 获取邮箱验证码
+export const emailCode = (data) => {
+  return axiosService.post("/user/emailCode", data);
+};

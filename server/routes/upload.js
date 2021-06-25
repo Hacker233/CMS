@@ -5,7 +5,7 @@ const endPoint = "localhost";
 const port = 9000;
 const accessKey = "minioadmin";
 const secretKey = "minioadmin";
-let bucket = "images";
+let bucket = "files";
 const minioClient = new Minio.Client({
   endPoint,
   port,
@@ -24,7 +24,7 @@ const upload = {
       req.file.originalname,
       req.file.path,
       metaData,
-      function (error, etag) {
+      (error, etag) => {
         if (error) {
           res.send(null, "F0001", error);
         } else {

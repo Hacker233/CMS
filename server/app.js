@@ -73,7 +73,7 @@ app.use(
       "/user/register",
       "/menu",
       "/recommended/recommendedList",
-      "/upload"
+      "/user/emailCode"
     ], // 无需验证token
   })
 );
