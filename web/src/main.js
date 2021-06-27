@@ -6,11 +6,12 @@ import "./plugins/element.js";
 import "./theme/index.css"; // 主题
 import "./assets/css/reset.css";
 import "./common/auth"; // 权限检测
+import "./assets/css/common.less"; // 公共css
 import login from "./common/LoginDialog"; // 登录弹窗全局组件
 // import "@/assets/iconfont/iconfont.js";
-import IconPig from './components/IconSvg/IconPig.vue';
+import IconPig from "./components/IconSvg/IconPig.vue";
 
-Vue.component('IconPig',IconPig);
+Vue.component("IconPig", IconPig);
 Vue.prototype.$login = login.install;
 
 Vue.config.productionTip = false;

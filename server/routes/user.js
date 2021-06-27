@@ -37,29 +37,38 @@ const user = {
   // 注册
   register: async (req, res) => {
     const username = req.body.username;
-    const email = req.body.email;
+    const e_mail = req.body.email;
+    const code = req.body.code;
     const password = req.body.password;
-    // 查询数据库
+    // 检验验证码
+    const vire = await Code.findOne({ e_mail, code });
+    if (!vire) {
+      res.json(res.setUnifyResFormat(null, "U0001", "验证码填写错误!"));
+      return;
+    }
+
+    // 检验用户信息
     User.findOne(
       {
-        username: username,
+        email: e_mail,
       },
       (err, doc) => {
         if (doc) {
-          res.json(res.setUnifyResFormat("", "U0001", "用户名已经被注册了!"));
+          res.json(res.setUnifyResFormat("", "U0001", "邮件已被注册了!"));
           return;
         }
         // 保存用户注册的信息到数据中
         let user = new User({
           username: username,
           password: password,
-          email: email,
+          email: e_mail,
         });
         // 保存用户
         user.save(async (err, doc) => {
           if (err) {
             res.json(res.setUnifyResFormat("", "D0001", err));
           } else {
+            Code.deleteMany({ e_mail }); // 删除验证码
             // 生成token
             const token = await tokenSetAndVer.setToken(user.uid);
             res.setHeader("Authorization", "Bearer " + token);
@@ -117,9 +126,9 @@ const user = {
           subject: "验证你的电子邮件", // 标题
           html: `
             <p>你好！</p>
-            <p>您正在注册Cracker社区账号</p>
+            <p>您正在注册小猪社区账号</p>
             <p>你的验证码是：<strong style="color: #ff4e2a;">${code}</strong></p>
-            <p>***该验证码5分钟内有效***</p>`, // html 内容
+            <p>***该验证码10分钟内有效***</p>`, // html 内容
         },
         function (error, data) {
           if (error) {
@@ -131,9 +140,9 @@ const user = {
       await Code.deleteMany({ e_mail });
       const [data] = await Code.insertMany({ e_mail, code: code });
       setTimeout(async () => {
-        //5分钟后失效
+        //10分钟后失效
         await Code.deleteMany({ e_mail });
-      }, 1000 * 60 * 5);
+      }, 1000 * 60 * 10);
       res.json(res.setUnifyResFormat(null, "00000", "邮件发送成功"));
     } else {
       res.json(res.setUnifyResFormat(null, "E0001", "邮件格式错误"));

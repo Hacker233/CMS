@@ -15,56 +15,76 @@
           <i class="el-icon-close" @click="close"></i>
         </div>
         <div class="register-box">
-          <!-- 注册 -->
           <template v-if="isLogin">
-            <el-input
-              placeholder="请输入用户名"
-              v-model="formRegister.username"
+            <el-form
+              :model="ruleForm"
+              status-icon
+              :rules="rules"
+              ref="ruleForm"
+              label-width="70px"
+              label-position="left"
+              class="demo-ruleForm"
+              size="small"
             >
-              <template slot="prepend"
-                ><i class="el-icon-user-solid"></i>
-              </template>
-            </el-input>
-
-            <el-input placeholder="请输入邮箱" v-model="formRegister.email">
-              <template slot="prepend"
-                ><i class="el-icon-user-solid"></i>
-              </template>
-            </el-input>
-
-            <div>
-              <el-button type="primary" @click="getEmailCode"
-                >获取验证码</el-button
+              <el-form-item label="用户名" prop="username">
+                <el-input
+                  type="text"
+                  v-model="ruleForm.username"
+                  autocomplete="off"
+                  placeholder="请输入用户名"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="邮箱" prop="email">
+                <el-input
+                  type="email"
+                  v-model="ruleForm.email"
+                  autocomplete="off"
+                  placeholder="请输入电子邮箱"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="密码" prop="pass">
+                <el-input
+                  type="password"
+                  v-model="ruleForm.pass"
+                  autocomplete="off"
+                  placeholder="请输入密码"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="确认密码" prop="checkPass">
+                <el-input
+                  type="password"
+                  v-model="ruleForm.checkPass"
+                  autocomplete="off"
+                  placeholder="请再次输入密码"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="验证码" prop="code">
+                <el-input
+                  v-model.number="ruleForm.code"
+                  placeholder="请输入6位数的密码"
+                ></el-input>
+                <el-button
+                  type="primary"
+                  class="ml10"
+                  @click.native="getEmailCode('ruleForm')"
+                  >获取验证码</el-button
+                >
+              </el-form-item>
+              <el-form-item>
+                <el-checkbox v-model="checked"
+                  >勾选《同意用户协议》</el-checkbox
+                >
+              </el-form-item>
+              <el-button
+                type="primary"
+                class="register-button"
+                @click="validate('ruleForm')"
+                >注册</el-button
               >
-            </div>
-
-            <el-input
-              placeholder="请输入密码"
-              v-model="formRegister.password"
-              type="password"
-            >
-              <template slot="prepend"
-                ><i class="el-icon-s-opportunity"></i>
-              </template>
-            </el-input>
-            <el-input
-              placeholder="请确认密码"
-              v-model="formRegister.checkPass"
-              type="password"
-            >
-              <template slot="prepend"
-                ><i class="el-icon-s-opportunity"></i>
-              </template>
-            </el-input>
-            <el-checkbox v-model="checked">勾选《同意用户协议》</el-checkbox>
-            <el-button
-              type="primary"
-              class="register-button"
-              @click="register"
-              :disabled="regsiterDisabled"
-              >注册</el-button
-            >
-            <p class="to-login" @click="toLogin">已有账号？立即登录</p>
+              <p class="to-login" @click="toLogin">
+                <span>已有账号？立即登录</span>
+              </p>
+            </el-form>
           </template>
           <!-- 登录 -->
           <template v-else>
@@ -101,6 +121,55 @@
 import { userRegister, userLogin, emailCode } from "@/service/api/user";
 export default {
   data() {
+    // 用户名
+    let validateUsername = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入用户名"));
+      } else {
+        callback();
+      }
+    };
+    // 邮箱
+    let validateEmail = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入电子邮箱"));
+      } else {
+        let isEmail =
+          /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(
+            value
+          );
+        if (isEmail) {
+          callback();
+        } else {
+          callback(new Error("请输入正确的邮箱格式"));
+        }
+      }
+    };
+    // 密码
+    let validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.ruleForm.checkPass !== "") {
+          this.$refs.ruleForm.validateField("checkPass");
+        }
+        callback();
+      }
+    };
+    // 确认密码
+    let validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.ruleForm.pass) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+    // 验证码
+    let validateCode = (rule, value, callback) => {
+      callback();
+    };
     return {
       visible: false,
       isLogin: true,
@@ -109,29 +178,23 @@ export default {
         username: "",
         password: "",
       },
-      formRegister: {
+      ruleForm: {
         username: "",
         email: "",
-        password: "",
+        pass: "",
         checkPass: "",
+        code: "",
+      },
+      rules: {
+        username: [{ validator: validateUsername, trigger: "blur" }],
+        email: [{ validator: validateEmail, trigger: "blur" }],
+        pass: [{ validator: validatePass, trigger: "blur" }],
+        checkPass: [{ validator: validatePass2, trigger: "blur" }],
+        code: [{ validator: validateCode, trigger: "blur" }],
       },
     };
   },
   computed: {
-    // 注册按钮是否可用
-    regsiterDisabled() {
-      if (
-        this.formRegister.username === "" ||
-        this.formRegister.password === "" ||
-        this.formRegister.checkPass === "" ||
-        !(this.formRegister.password === this.formRegister.checkPass) ||
-        !this.checked
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    },
     loginDisabled() {
       if (this.formLogin.username === "" || this.formLogin.password === "") {
         return true;
@@ -141,6 +204,9 @@ export default {
     },
   },
   methods: {
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
     // 打开登录弹窗
     open() {
       this.visible = true;
@@ -149,11 +215,27 @@ export default {
     close() {
       this.visible = false;
     },
-    // 注册用户
-    async register() {
+    // 校验注册信息
+    validate(formName) {
+      this.$refs[formName].validate(async (valid) => {
+        if (valid) {
+          this.registerSubmit();
+        } else {
+          return false;
+        }
+      });
+    },
+    // 注册
+    async registerSubmit() {
+      if (this.ruleForm.code === "") {
+        this.$message.error("请输入6位数的验证码");
+        return;
+      }
       let params = {
-        username: this.formRegister.username,
-        password: this.formRegister.password,
+        username: this.ruleForm.username,
+        password: this.ruleForm.pass,
+        email: this.ruleForm.email,
+        code: this.ruleForm.code,
       };
       const data = await userRegister(params);
       if (data.code === "00000") {
@@ -190,19 +272,25 @@ export default {
       this.isLogin = !this.isLogin;
     },
     // 获取邮箱验证码
-    async getEmailCode() {
-      let params = {
-        email: this.formRegister.email,
-      };
-      const data = await emailCode(params);
-      if (data.code === "00000") {
-        this.$message.success("已发送验证码！");
-      } else {
-        this.$message({
-          message: data.message,
-          type: "error",
-        });
-      }
+    getEmailCode(formName) {
+      this.$refs[formName].validate(async (valid) => {
+        if (valid) {
+          let params = {
+            email: this.ruleForm.email,
+          };
+          const data = await emailCode(params);
+          if (data.code === "00000") {
+            this.$message.success("已发送验证码！");
+          } else {
+            this.$message({
+              message: data.message,
+              type: "error",
+            });
+          }
+        } else {
+          return false;
+        }
+      });
     },
   },
 };
@@ -265,12 +353,11 @@ export default {
     }
     .register-box {
       height: 80%;
-      width: 75%;
       margin: 0 auto;
-      padding-top: 70px;
+      padding: 70px 40px 0 40px;
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
+      align-items: flex-start;
       justify-content: space-evenly;
       p {
         width: 100%;
@@ -287,6 +374,26 @@ export default {
       .login-title {
         margin: 0 auto;
         font-size: 20px;
+      }
+      /deep/ .el-form {
+        width: 100%;
+        .el-form-item__content {
+          display: flex;
+        }
+      }
+      .register-button {
+        width: 100%;
+      }
+      .to-login {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        span {
+          cursor: pointer;
+          & :hover {
+            color: #669;
+          }
+        }
       }
     }
   }

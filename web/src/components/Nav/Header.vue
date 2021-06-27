@@ -72,7 +72,7 @@
 import { menuList } from "@/service/api/header";
 import { getUserInfo } from "@/service/api/user";
 export default {
-  inject:['reload'],
+  inject: ["reload"],
   data() {
     return {
       menu: [],
@@ -116,6 +116,11 @@ export default {
             this.refresh();
           }
         },
+        register: (data) => {
+          if (data) {
+            this.refresh();
+          }
+        },
       });
     },
     // 跳转至发布页
@@ -127,6 +132,11 @@ export default {
           login: () => {
             this.refresh();
             this.$router.push({ name: "writeSelect" });
+          },
+          register: (data) => {
+            if (data) {
+              this.refresh();
+            }
           },
         });
       }
@@ -146,9 +156,9 @@ export default {
       console.log(key, keyPath);
     },
     // 刷新页面,不会重载页面
-    refresh(){
-			this.reload();
-		}
+    refresh() {
+      this.reload();
+    },
   },
 };
 </script>
