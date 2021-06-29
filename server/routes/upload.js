@@ -14,7 +14,8 @@ const minioClient = new Minio.Client({
   secretKey,
 });
 let metaData = {
-  "X-Amz-Meta-Testing": 1234,
+  "Content-Type": "application/octet-stream",
+  "X-Amz-Storage-Class": "REDUCED_REDUNDANCY",
   example: 5678,
 };
 const upload = {
@@ -31,6 +32,7 @@ const upload = {
           let responseData = {
             fileName: req.file.originalname,
             fileUrl:
+              "http://" +
               endPoint +
               ":" +
               port +

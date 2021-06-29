@@ -8,7 +8,7 @@ const bodyParser = require("body-parser"); // 处理post请求中间件
 const mongodbConnect = require("./database/connect"); // 数据库连接文件
 const router = require("./routes/route"); // 引入router模块
 const resextra = require("./utils/unifyResFormat"); // 格式化返回数据
-const tokenSetAndVer = require("./utils/auth"); // 校验token
+const tokenSetAndVer = require("./utils/token"); // 校验token
 const expressJWT = require("express-jwt"); // 校验token过期时间以及不需要token检测的路由
 const tokenConfig = require("./config/index");
 const app = express();
@@ -72,8 +72,9 @@ app.use(
       "/user/login",
       "/user/register",
       "/menu",
-      "/recommended/recommendedList",
-      "/user/emailCode"
+      "/article/recommendedList",
+      "/user/emailCode",
+      "/category/categoryList",
     ], // 无需验证token
   })
 );

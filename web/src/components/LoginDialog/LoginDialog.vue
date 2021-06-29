@@ -89,7 +89,7 @@
           <!-- 登录 -->
           <template v-else>
             <h1 class="login-title">账号登录</h1>
-            <el-input placeholder="请输入用户名" v-model="formLogin.username">
+            <el-input placeholder="请输入邮箱" v-model="formLogin.email">
               <template slot="prepend"
                 ><i class="el-icon-user-solid"></i>
               </template>
@@ -175,7 +175,7 @@ export default {
       isLogin: true,
       checked: "",
       formLogin: {
-        username: "",
+        email: "",
         password: "",
       },
       ruleForm: {
@@ -196,7 +196,7 @@ export default {
   },
   computed: {
     loginDisabled() {
-      if (this.formLogin.username === "" || this.formLogin.password === "") {
+      if (this.formLogin.email === "" || this.formLogin.password === "") {
         return true;
       } else {
         return false;
@@ -252,7 +252,7 @@ export default {
     // 登录
     async userLogin() {
       let params = {
-        username: this.formLogin.username,
+        email: this.formLogin.email,
         password: this.formLogin.password,
       };
       const data = await userLogin(params);

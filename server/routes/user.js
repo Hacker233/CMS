@@ -1,6 +1,6 @@
 const User = require("../database/models/user"); // 模型
 const Code = require("../database/models/code");
-const tokenSetAndVer = require("../utils/auth"); // 设置token和校验token
+const tokenSetAndVer = require("../utils/token"); // 设置token和校验token
 const bcryptjs = require("bcryptjs"); // 密码加密
 
 // 邮件发送模块
@@ -12,7 +12,7 @@ const user = {
   login: async (req, res) => {
     // 查询是否有此用户
     const user = await User.findOne({
-      username: req.body.username,
+      email: req.body.email,
     });
     if (!user) {
       res.json(res.setUnifyResFormat("", "U0002", "用户名不存在!"));
@@ -29,7 +29,7 @@ const user = {
       }
     }
     // 生成token
-    const token = await tokenSetAndVer.setToken(user.uid);
+    const token = await tokenSetAndVer.setToken(user.uid, user.role);
     res.setHeader("Authorization", "Bearer " + token);
     // 返回
     res.json(res.setUnifyResFormat(null, "00000", "登录成功！"));
@@ -70,7 +70,7 @@ const user = {
           } else {
             Code.deleteMany({ e_mail }); // 删除验证码
             // 生成token
-            const token = await tokenSetAndVer.setToken(user.uid);
+            const token = await tokenSetAndVer.setToken(user.uid, user.role);
             res.setHeader("Authorization", "Bearer " + token);
             res.json(res.setUnifyResFormat(doc, "00000", "注册成功"));
           }

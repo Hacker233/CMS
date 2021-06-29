@@ -12,7 +12,6 @@ function delDir(path){
                 fs.unlinkSync(curPath); //删除文件
             }
         });
-        fs.rmdirSync(path);  // 删除文件夹自身
     }
 }
  

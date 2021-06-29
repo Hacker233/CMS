@@ -18,5 +18,7 @@ const article = {
     }
     res.json(res.setUnifyResFormat(responseList, "00000", "查询成功"));
   },
+  // 发布文章
+  publish: () => {},
 };
 module.exports = article;

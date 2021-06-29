@@ -1,9 +1,53 @@
 <template>
   <div class="write-box">
     <!-- 上传封面区域 -->
-    <div class="upload-cover"></div>
+    <div class="flex f-j-c f-a-c w1200 h450 ma mb20 bgcW posr upload-cover">
+      <template v-if="coverImg">
+        <el-image
+          :src="coverImg.fileUrl"
+          class="ph100 pw100 cusp cover-img"
+          @mouseover="showDelCover"
+        ></el-image>
+        <!-- 删除图片蒙层 -->
+        <div
+          v-show="isShowDelCover"
+          @mouseleave="notShowDelCover"
+          class="del-img ph100 pw100 posa tp0 bt0 flex f-j-c f-a-c flex-clum"
+        >
+          <IconPig
+            icon-style="dele-icon"
+            icon-class="icon-smallpigshanchu1"
+            @click.native="delCoverImg"
+          />
+        </div>
+      </template>
+      <template v-else>
+        <el-upload
+          class="upload-demo"
+          :show-file-list="false"
+          :limit="1"
+          drag
+          action="http://localhost:3000/upload"
+          :multiple="false"
+          :headers="headers"
+          :on-success="handleCoverSuccess"
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        </el-upload>
+      </template>
+    </div>
     <!-- 标题 -->
-    <div class="title"></div>
+    <div class="title">
+      <el-input
+        type="text"
+        placeholder="请输入标题（不超过50字）"
+        v-model="title"
+        maxlength="50"
+        show-word-limit
+      >
+      </el-input>
+    </div>
     <!-- 内容编辑区 -->
     <div class="editor-box">
       <!-- 富文本编辑器 -->
@@ -51,8 +95,38 @@
 import IconPig from "../../components/IconSvg/IconPig.vue";
 import WangEditor from "./components/WangEditor.vue";
 export default {
+  data() {
+    return {
+      headers: {
+        Authorization: localStorage.getItem("token"),
+      },
+      coverImg: "",
+      coverFilelist: [],
+      isShowDelCover: false,
+      title: "",
+    };
+  },
   components: {
     WangEditor,
+  },
+  methods: {
+    // 封面上传成功回调
+    handleCoverSuccess(response, fileList) {
+      this.coverImg = response.data;
+      this.coverFilelist = fileList;
+      console.log(this.coverImg);
+    },
+    // 显示删除图层
+    showDelCover() {
+      this.isShowDelCover = true;
+    },
+    notShowDelCover() {
+      this.isShowDelCover = false;
+    },
+    // 删除封面图
+    delCoverImg() {
+      this.coverImg = "";
+    },
   },
 };
 
@@ -62,17 +136,53 @@ IconPig;
 .write-box {
   padding: 20px 0;
   .upload-cover {
-    width: 1200px;
-    height: 450px;
-    margin: 0 auto;
-    margin-bottom: 20px;
-    background-color: #fff;
+    .upload-demo {
+      height: 100%;
+      width: 100%;
+      /deep/ .el-upload {
+        height: 100%;
+        width: 100%;
+        .el-upload-dragger {
+          height: 100%;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+    .del-img {
+      background-color: rgba(0, 0, 0, 0.5);
+      .dele-icon {
+        width: 50px;
+        height: 50px;
+        fill: #fff;
+        cursor: pointer;
+      }
+    }
   }
   .title {
     width: 1200px;
     height: 80px;
     background-color: #fff;
     margin: 0 auto;
+    /deep/ .el-input {
+      height: 100%;
+      .el-input__inner {
+        height: 100%;
+        border: none;
+        font-size: 600;
+        font-size: 32px;
+        font-weight: 700;
+        &::-webkit-input-placeholder {
+          color: #121212;
+          opacity: 0.5;
+          font-size: 32px;
+          font-weight: 600;
+        }
+      }
+    }
   }
   .editor-box {
     width: 1200px;

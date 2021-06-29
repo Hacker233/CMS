@@ -40,7 +40,7 @@ import VideoCard from "./components/VideoCard"; // 视频卡片
 import UserBox from "@/components/UserBox/UserBox"; // 用户组件
 import TypeSort from "./components/TypeSort.vue"; // 标题组件
 import ArticleList from "./components/ArticleList.vue"; // 文章列表
-import { recommendedList } from "@/service/api/recommended.js";
+import { recommendedList } from "@/service/api/article.js";
 import upload from './components/upload.vue'
 export default {
   data(){
