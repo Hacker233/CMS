@@ -16,8 +16,8 @@ const articleScheam = new mongoose.Schema({
     type: String,
   },
   // 文章类型
-  type: {
-    type: String,
+  types: {
+    type: Array,
   },
   //  文章内容
   content: {

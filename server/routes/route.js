@@ -11,6 +11,8 @@ const upload = require("./upload");
 // 权限校验
 const auth = require('../utils/auth');
 
+/******************前端管理页面相关接口********************/
+
 // 用户相关路由
 router.post("/user/login", user.login); // 登录
 router.post("/user/register", user.register); // 注册
@@ -26,7 +28,6 @@ router.post("/article/publish", article.publish); // 发布文章
 
 // 分类相关接口
 router.get("/category/categoryList", category.categoryList); // 获取分类列表
-router.post("/category/addCategory", auth, category.addCategory); // 添加分类列表(管理员才能请求)
 
 // 上传文件
 router.post(
@@ -34,5 +35,12 @@ router.post(
   Multer({ dest: "./uploads/" }).single("file"),
   upload.upload
 );
+
+
+/******************后台管理页面相关接口********************/
+// 分类相关接口
+router.post("/category/addCategory", auth, category.addCategory); // 添加分类列表(管理员才能请求)
+
+
 // 导出路由模块
 module.exports = router;

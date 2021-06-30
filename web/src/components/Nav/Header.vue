@@ -56,6 +56,9 @@
         <el-dropdown v-else>
           <el-avatar class="avatar" :src="userInfo.avatar"></el-avatar>
           <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item v-if="userInfo.role === '1'"
+              >后台管理</el-dropdown-item
+            >
             <el-dropdown-item @click.native="toPersonalCenter"
               >个人中心</el-dropdown-item
             >

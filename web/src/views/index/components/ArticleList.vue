@@ -6,24 +6,26 @@
       <span class="time">3小时前</span>
       <span>{{ articleItem.category }}</span>
       <div class="point"></div>
-      <span>{{ articleItem.type }}</span>
+      <span v-for="(item, index) in articleItem.types" :key="index">{{
+        item.type_name
+      }}</span>
     </div>
     <div class="article-content">
       <div class="content-left">
-        <h1>{{ articleItem.title }}</h1>
-        <div class="content">
-          <p>{{ articleItem.content }}</p>
+        <h1 @click="toArticleDetail(articleItem)">{{ articleItem.title }}</h1>
+        <div class="content" @click="toArticleDetail(articleItem)">
+          <p class="article-content">{{ articleItem.content }}</p>
         </div>
         <div class="article-data">
           <IconPig icon-style="views" icon-class="icon-smallpigliulanliang" />
-          <span>123</span>
+          <span>{{ articleItem.views }}</span>
           <IconPig
             icon-style="collections"
             icon-class="icon-smallpigshoucang"
           />
-          <span>234</span>
+          <span>{{ articleItem.collections }}</span>
           <IconPig icon-style="likes" icon-class="icon-smallpigicon-test" />
-          <span>123</span>
+          <span>{{ articleItem.likes }}</span>
         </div>
       </div>
       <div class="cover">
@@ -42,6 +44,17 @@ export default {
       default: () => {
         return {};
       },
+    },
+  },
+  methods: {
+    // 跳转至文章详情
+    toArticleDetail(articleItem) {
+      this.$router.push({
+        name: "articleDetails",
+        query: {
+          id: articleItem.article_id,
+        },
+      });
     },
   },
 };
@@ -92,6 +105,10 @@ export default {
       h1 {
         font-weight: 700;
         font-size: 18px;
+        cursor: pointer;
+        &:hover {
+          color: #669;
+        }
       }
       .content {
         display: flex;
@@ -105,6 +122,10 @@ export default {
           white-space: nowrap;
           flex-grow: 1;
           width: 0;
+          cursor: pointer;
+          &:hover {
+            color: #669;
+          }
         }
       }
       .article-data {
@@ -116,7 +137,9 @@ export default {
           font-size: 13px;
           color: #4e5969;
         }
-        .views,.collections,.likes{
+        .views,
+        .collections,
+        .likes {
           width: 15px;
           height: 15px;
           fill: #86909c;
@@ -130,6 +153,7 @@ export default {
       margin-left: 20px;
       display: flex;
       align-items: center;
+      overflow: hidden;
     }
   }
 }

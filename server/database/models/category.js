@@ -17,6 +17,11 @@ const categorySchema = new mongoose.Schema({
   category_router: {
     type: String,
   },
+  // 包含类型
+  types: {
+    type: Array,
+    default: [],
+  },
 });
 // 自增 ID 插件配置
 autoIncrement.initialize(mongoose.connection);

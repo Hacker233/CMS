@@ -51,39 +51,41 @@
     <!-- 内容编辑区 -->
     <div class="editor-box">
       <!-- 富文本编辑器 -->
-      <wang-editor></wang-editor>
+      <wang-editor @articleContent="articleContent"></wang-editor>
       <!-- 右侧区域 -->
       <div class="outline-box">
         <div class="release-box">
-          <div class="release-btn">
+          <div class="release-btn" @click="publishArticle">
             <IconPig
               icon-style="release-icon"
               icon-class="icon-smallpigfabujishu"
             />
             <h1>发布</h1>
           </div>
-          <div class="category-box common-style">
+          <div class="category-box common-style pw100">
             <p>分类:</p>
             <ul>
-              <li>前端</li>
-              <li>前端</li>
-              <li>前端</li>
-              <li>前端</li>
-              <li>前端</li>
-              <li>前端</li>
-              <li>前端</li>
+              <li
+                :class="[{ active: categoryName === item.category_name }]"
+                v-for="(item, index) in categoryList"
+                :key="index"
+                @click="chooseCategory(item)"
+              >
+                {{ item.category_name }}
+              </li>
             </ul>
           </div>
-          <div class="type-box common-style">
+          <div class="type-box common-style pw100" v-if="types.length">
             <p>类型:</p>
             <ul>
-              <li>HTML</li>
-              <li>javascript</li>
-              <li>前端</li>
-              <li>前端</li>
-              <li>前端</li>
-              <li>前端</li>
-              <li>前端</li>
+              <li
+                :class="[{ active: isActiveType(item) }]"
+                v-for="(item, index) in types"
+                :key="index"
+                @click="chooseTypes(item)"
+              >
+                {{ item.type_name }}
+              </li>
             </ul>
           </div>
         </div>
@@ -94,6 +96,8 @@
 <script>
 import IconPig from "../../components/IconSvg/IconPig.vue";
 import WangEditor from "./components/WangEditor.vue";
+import { categoryList } from "@/service/api/category.js";
+import { publishArticle } from "@/service/api/article.js";
 export default {
   data() {
     return {
@@ -101,20 +105,31 @@ export default {
         Authorization: localStorage.getItem("token"),
       },
       coverImg: "",
-      coverFilelist: [],
+      coverFilelist: [], // 封面文件列表
       isShowDelCover: false,
-      title: "",
+      title: "", // 文章标题
+      content: "", // 文章内容
+      categoryList: [], // 分类列表
+      types: [], // 类型
+      selectedTypes: [], // 选中的类型
+      categoryName: "", // 选中的分类名称
     };
   },
   components: {
     WangEditor,
   },
+  mounted() {
+    this.init();
+  },
   methods: {
+    // 初始化数据
+    init() {
+      this.getCategoryList();
+    },
     // 封面上传成功回调
     handleCoverSuccess(response, fileList) {
       this.coverImg = response.data;
       this.coverFilelist = fileList;
-      console.log(this.coverImg);
     },
     // 显示删除图层
     showDelCover() {
@@ -126,6 +141,80 @@ export default {
     // 删除封面图
     delCoverImg() {
       this.coverImg = "";
+    },
+
+    // 获取文章内容
+    articleContent(newHtml) {
+      this.content = newHtml;
+    },
+    // 判断类型是否选中
+    isActiveType(item) {
+      for (let i = 0; i < this.selectedTypes.length; i++) {
+        if (item.type_id === this.selectedTypes[i].type_id) {
+          return true;
+        }
+      }
+      return false;
+    },
+    // 获取分类列表
+    async getCategoryList() {
+      const data = await categoryList();
+      if (data.code === "00000") {
+        this.categoryList = data.data;
+      } else {
+        this.$message.error(data.message);
+      }
+    },
+    // 选择分类
+    chooseCategory(item) {
+      this.categoryName = item.category_name;
+      this.types = item.types;
+    },
+    // 选择类型
+    chooseTypes(item) {
+      let selectedIndex = "";
+      for (let i = 0; i < this.selectedTypes.length; i++) {
+        if (item.type_id === this.selectedTypes[i].type_id) {
+          selectedIndex = i;
+        }
+      }
+      if (selectedIndex !== "") {
+        this.selectedTypes.splice(selectedIndex, 1);
+      } else {
+        this.selectedTypes.push(item);
+      }
+    },
+
+    // 发布文章
+    async publishArticle() {
+      // 判空
+      if (!this.title.trim()) {
+        this.$message.error("请输入文章标题");
+        return;
+      } else if (!this.content) {
+        this.$message.error("请输入文章内容");
+        return;
+      } else if (!this.categoryName) {
+        this.$message.error("请选择文章分类");
+        return;
+      } else if (!this.selectedTypes.length) {
+        this.$message.error("请选择文章类型");
+        return;
+      }
+
+      let params = {
+        title: this.title,
+        cover: this.coverImg.fileUrl,
+        content: this.content,
+        category: this.categoryName,
+        types: this.selectedTypes,
+      };
+      const data = await publishArticle(params);
+      if (data.code === "00000") {
+        this.$message.success("发布成功");
+      } else {
+        this.$message.error(data.message);
+      }
     },
   },
 };
@@ -261,6 +350,11 @@ IconPig;
               cursor: pointer;
               font-size: 14px;
               user-select: none;
+              cursor: pointer;
+            }
+            .active {
+              background-color: #669;
+              color: #fff;
             }
           }
         }

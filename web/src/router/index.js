@@ -1,12 +1,16 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
+/***************前台页面路由***************/
 const Index = () => import("@/views/index/index.vue"); // 首页
 const Category = () => import("@/views/category/index.vue"); // 分类页
 const ArticleDetails = () => import("@/views/articleDetails/index.vue"); // 文章详情页
 const PersonalCenter = () => import("@/views/personalCenter/index.vue"); // 个人中心
 const WriteSelect = () => import("@/views/writeSelect/index.vue"); // 发布选择页面
 const WriteArticle = () => import("@/views/writeArticle/index.vue"); // 编辑页面
+
+/***************管理页面路由***************/
+const Admin = () => import("@/admin/index/index.vue"); // 管理首页
 
 const routes = [
   // 首页
@@ -61,6 +65,16 @@ const routes = [
       auth: true,
     },
     component: PersonalCenter,
+  },
+
+  /***************管理员页面****************/
+  {
+    path: "/admin",
+    name: "admin",
+    meta: {
+      auth: true,
+    },
+    component: Admin,
   },
 ];
 
