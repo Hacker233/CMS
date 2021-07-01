@@ -17,15 +17,21 @@
           <p class="article-content">{{ articleItem.content }}</p>
         </div>
         <div class="article-data">
+          <!-- 浏览量 -->
           <IconPig icon-style="views" icon-class="icon-smallpigliulanliang" />
           <span>{{ articleItem.views }}</span>
+          <!-- 收藏量 -->
           <IconPig
             icon-style="collections"
             icon-class="icon-smallpigshoucang"
           />
           <span>{{ articleItem.collections }}</span>
+          <!-- 点赞量 -->
           <IconPig icon-style="likes" icon-class="icon-smallpigicon-test" />
           <span>{{ articleItem.likes }}</span>
+          <!-- 评论量 -->
+          <IconPig icon-style="comments" icon-class="icon-smallpigpinglun" />
+          <span>{{ articleItem.comments }}</span>
         </div>
       </div>
       <div class="cover">
@@ -139,7 +145,8 @@ export default {
         }
         .views,
         .collections,
-        .likes {
+        .likes,
+        .comments {
           width: 15px;
           height: 15px;
           fill: #86909c;

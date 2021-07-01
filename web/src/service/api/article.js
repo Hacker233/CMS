@@ -7,3 +7,7 @@ export const recommendedList = () => {
 export const publishArticle = (data) => {
   return axiosService.post("/article/publish", data);
 };
+// 获取文章详情
+export const getArticleInfo = (params) => {
+  return axiosService.get("/article/articleInfo", { params });
+};

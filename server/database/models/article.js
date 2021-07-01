@@ -55,6 +55,11 @@ const articleScheam = new mongoose.Schema({
   rank: {
     type: Number,
   },
+  // 文章创建时间
+  createTime: {
+    type: String,
+    default: '2021-01-01 14:00:23'
+  }
 });
 // 自增 ID 插件配置
 autoIncrement.initialize(mongoose.connection);

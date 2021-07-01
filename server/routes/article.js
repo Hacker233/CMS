@@ -16,7 +16,7 @@ const article = {
       articleObj.title = "热门文章";
       articleObj.flag = "1";
       articleObj.topArticleList = topArticleList.map((item) => {
-        item.content.replace(/<[^>]+>/g, "");
+        item.content.replace(/<[a-zA-Z]+.*?>/g, "");
         return item;
       });
       responseList.push(articleObj);
@@ -55,9 +55,21 @@ const article = {
       if (err) {
         res.json(res.setUnifyResFormat(err, "A0002", "发布文章失败"));
       } else {
-        res.json(res.setUnifyResFormat(null, "00000", "发布成功"));
+        res.json(res.setUnifyResFormat(doc, "00000", "发布成功"));
       }
     });
+  },
+  // 获取文章详情
+  articleInfo: async (req, res) => {
+    let article_id = req.query.article_id;
+    const article = await Article.findOne({
+      article_id
+    })
+    if (!article) {
+      res.json(res.setUnifyResFormat(null, "A0003", "文章查询失败"));
+    } else {
+      res.json(res.setUnifyResFormat(article, "00000", "查询成功"));
+    }
   },
 };
 module.exports = article;

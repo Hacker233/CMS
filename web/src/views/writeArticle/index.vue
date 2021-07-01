@@ -212,9 +212,19 @@ export default {
       const data = await publishArticle(params);
       if (data.code === "00000") {
         this.$message.success("发布成功");
+        this.toArticleDetail(data.data);
       } else {
         this.$message.error(data.message);
       }
+    },
+    // 跳转至文章详情
+    toArticleDetail(articleItem) {
+      this.$router.push({
+        name: "articleDetails",
+        query: {
+          id: articleItem.article_id,
+        },
+      });
     },
   },
 };

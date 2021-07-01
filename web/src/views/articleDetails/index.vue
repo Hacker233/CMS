@@ -3,7 +3,7 @@
     <div class="contex-box">
       <article class="article-left">
         <!-- 文章内容详情区域 -->
-        <article-content></article-content>
+        <article-content v-if="Object.keys(articleItem).length" :articleItem="articleItem"></article-content>
         <!-- 评论组件 -->
         <comment-com
           @doSend="doSend($event)"
@@ -21,6 +21,8 @@
         <!-- 右侧用户详情区域 -->
         <user-box></user-box>
       </div>
+      <!-- 用户操作浮窗 -->
+      <handle-box></handle-box>
     </div>
   </div>
 </template>
@@ -28,9 +30,12 @@
 import CommentCom from "./components/Comment.vue"; // 评论组件
 import ArticleContent from "./components/ArticleContent"; // 文章详情
 import UserBox from "@/components/UserBox/UserBox"; // 用户卡片
+import HandleBox from "./components/HandleBox.vue"; // 点赞等操作浮窗
+import { getArticleInfo } from "@/service/api/article.js";
 export default {
   data() {
     return {
+      articleItem: {}, // 文章详细信息
       label: "SVIP",
       placeholder: "说点什么吧",
       minRows: 4,
@@ -79,8 +84,24 @@ export default {
     UserBox,
     ArticleContent,
     CommentCom,
+    HandleBox
+  },
+  mounted() {
+    this.articleInfo();
   },
   methods: {
+    // 获取文章详情
+    async articleInfo() {
+      let params = {
+        article_id: this.$route.query.id,
+      };
+      const data = await getArticleInfo(params);
+      if (data.code === "00000") {
+        this.articleItem = data.data;
+      } else {
+        this.$message.error(data.message);
+      }
+    },
     doSend(content) {
       console.log("初始发送按钮点击事件：" + content);
     },

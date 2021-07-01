@@ -3,37 +3,57 @@
     <!-- 文章详情头部 -->
     <header>
       <div class="author">
-        <el-avatar :size="50" src="https://empty" @error="errorHandler">
-          <img
-            src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
-          />
+        <el-avatar
+          :size="50"
+          :src="articleItem.userInfo.avatar"
+          @error="errorHandler"
+        >
         </el-avatar>
         <div class="userinfo">
-          <h1 class="username">张三</h1>
-          <p class="article-date">2021年06月06日<span>阅读 1842</span></p>
+          <h1 class="username">{{ articleItem.userInfo.username }}</h1>
+          <p class="article-date">
+            {{ $moment(articleItem.createTime).format("YYYY年MM月DD")
+            }}<span class="ml10">阅读 {{ articleItem.views }}</span>
+          </p>
         </div>
         <el-button size="small">关注</el-button>
       </div>
     </header>
     <article class="content">
-      <h1 class="article-title">JAVA同一IP访问同一接口进行频率限制</h1>
-      <section>
-        这里用到了redis,解释一下redis的key（IP+URL）记录了某个ip访问某个接口，value存的是访问的次数，加上一个过期时间，过期时间就是我们在注解上赋值的值。
-        这里的redis的部分代码也贴出来这里用到了redis,解释一下redis的key（IP+URL）记录了某个ip访问某个接口，value存的是访问的次数，加上一个过期时间，过期时间就是我们在注解上赋值的值。
-        这里的redis的部分代码也贴出来这里用到了redis,解释一下redis的key（IP+URL）记录了某个ip访问某个接口，value存的是访问的次数，加上一个过期时间，过期时间就是我们在注解上赋值的值。
-        这里的redis的部分代码也贴出来这里用到了redis,解释一下redis的key（IP+URL）记录了某个ip访问某个接口，value存的是访问的次数，加上一个过期时间，过期时间就是我们在注解上赋值的值。
-        这里的redis的部分代码也贴出来这里用到了redis,解释一下redis的key（IP+URL）记录了某个ip访问某个接口，value存的是访问的次数，加上一个过期时间，过期时间就是我们在注解上赋值的值。
-        这里的redis的部分代码也贴出来
-      </section>
+      <h1 class="article-title">{{ articleItem.title }}</h1>
+      <section v-html="articleItem.content"></section>
     </article>
     <footer class="classify">
-      <span class="tag-group__title">文章标7</span>
-      <el-tag size="small">标签一</el-tag>
-      <el-tag size="small">标签一</el-tag>
-      <el-tag size="small">标签一</el-tag>
+      <span class="tag-group__title">文章分类</span>
+      <el-tag class="cusp" size="small">{{ articleItem.category }}</el-tag>
+      <span class="tag-group__title">文章类型</span>
+      <el-tag
+        class="cusp"
+        size="small"
+        v-for="(item, index) in articleItem.types"
+        :key="index"
+        >{{ item.type_name }}</el-tag
+      >
     </footer>
   </article>
 </template>
+<script>
+export default {
+  props: {
+    articleItem: {
+      type: Object,
+      defaule: () => {
+        return {};
+      },
+    },
+  },
+  methods: {
+    errorHandler() {
+      return true;
+    },
+  },
+};
+</script>
 <style lang="less" scoped>
 .article-content-box {
   width: 100%;

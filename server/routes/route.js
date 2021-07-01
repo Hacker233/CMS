@@ -9,7 +9,7 @@ const category = require("./category");
 const upload = require("./upload");
 
 // 权限校验
-const auth = require('../utils/auth');
+const auth = require("../utils/auth");
 
 /******************前端管理页面相关接口********************/
 
@@ -25,6 +25,7 @@ router.get("/menu", menu.menu);
 // 文章相关接口
 router.get("/article/recommendedList", article.recommendedList); // 获取热门文章
 router.post("/article/publish", article.publish); // 发布文章
+router.get("/article/articleInfo", article.articleInfo); // 获取文章详情
 
 // 分类相关接口
 router.get("/category/categoryList", category.categoryList); // 获取分类列表
@@ -36,11 +37,9 @@ router.post(
   upload.upload
 );
 
-
 /******************后台管理页面相关接口********************/
 // 分类相关接口
 router.post("/category/addCategory", auth, category.addCategory); // 添加分类列表(管理员才能请求)
-
 
 // 导出路由模块
 module.exports = router;

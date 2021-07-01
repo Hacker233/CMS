@@ -10,7 +10,9 @@ import "./assets/css/common.less"; // 公共css
 import login from "./common/LoginDialog"; // 登录弹窗全局组件
 // import "@/assets/iconfont/iconfont.js";
 import IconPig from "./components/IconSvg/IconPig.vue";
+import moment from "moment";
 
+Vue.prototype.$moment = moment;
 Vue.component("IconPig", IconPig);
 Vue.prototype.$login = login.install;
 
