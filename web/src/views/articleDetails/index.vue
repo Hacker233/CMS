@@ -1,21 +1,14 @@
 <template>
-  <div class="article-details-box">
+  <div class="article-details-box mb20">
     <div class="contex-box">
       <article class="article-left">
         <!-- 文章内容详情区域 -->
-        <article-content v-if="Object.keys(articleItem).length" :articleItem="articleItem"></article-content>
+        <article-content
+          v-if="Object.keys(articleItem).length"
+          :articleItem="articleItem"
+        ></article-content>
         <!-- 评论组件 -->
-        <comment-com
-          @doSend="doSend($event)"
-          @doChidSend="doChidSend(arguments)"
-          :commentList="commentList"
-          :commentNum="commentNum"
-          :label="label"
-          :avatar="avatar"
-          :placeholder="placeholder"
-          :minRows="minRows"
-          :maxRows="maxRows"
-        ></comment-com>
+        <comment-com :commentList="commentList" @submit="submit"></comment-com>
       </article>
       <div class="article-right">
         <!-- 右侧用户详情区域 -->
@@ -32,62 +25,23 @@ import ArticleContent from "./components/ArticleContent"; // 文章详情
 import UserBox from "@/components/UserBox/UserBox"; // 用户卡片
 import HandleBox from "./components/HandleBox.vue"; // 点赞等操作浮窗
 import { getArticleInfo } from "@/service/api/article.js";
+import { getCommentList } from "@/service/api/comment.js";
 export default {
   data() {
     return {
       articleItem: {}, // 文章详细信息
-      label: "SVIP",
-      placeholder: "说点什么吧",
-      minRows: 4,
-      maxRows: 4,
-      commentNum: 2,
-      avatar: require("./components/img/icon/avtar.png"),
-      commentList: [
-        {
-          id: 1,
-          commentUser: {
-            id: 1,
-            nickName: "花非花",
-            avatar:
-              "http://qzapp.qlogo.cn/qzapp/101483738/6637A2B6611592A44A7699D14E13F7F7/50",
-          },
-          content:
-            "<a style='text-decoration:none;color: #409eff ' href='https://blog.csdn.net/abcwanglinyong/'>我的CSDN博客地址</a>[害羞][害羞][害羞]<br/>" +
-            "我的微信公众号：<br/>" +
-            "<img src=" +
-            require("./components/img/hbl.jpg") +
-            ">",
-          createDate: "2019-9-23 17:36:02",
-          childrenList: [
-            {
-              id: 2,
-              commentUser: {
-                id: 2,
-                nickName: "坏菠萝",
-                avatar: "",
-              },
-              targetUser: {
-                id: 1,
-                nickName: "花非花",
-                avatar:
-                  "http://qzapp.qlogo.cn/qzapp/101483738/6637A2B6611592A44A7699D14E13F7F7/50",
-              },
-              content: "真的就很棒！很Nice!",
-              createDate: "2019-9-23 17:45:26",
-            },
-          ],
-        },
-      ],
+      commentList: [], // 评论列表
     };
   },
   components: {
     UserBox,
     ArticleContent,
     CommentCom,
-    HandleBox
+    HandleBox,
   },
   mounted() {
-    this.articleInfo();
+    this.articleInfo(); // 获取文章信息
+    this.getCommentList(); // 获取评论列表
   },
   methods: {
     // 获取文章详情
@@ -102,6 +56,24 @@ export default {
         this.$message.error(data.message);
       }
     },
+    // 获取评论列表
+    async getCommentList() {
+      let params = {
+        article_id: this.$route.query.id,
+      };
+      const data = await getCommentList(params);
+      if (data.code === "00000") {
+        if (data.data) {
+          this.commentList = data.data;
+        } else {
+          this.commentList = [];
+        }
+      } else {
+        this.$message.error(data.message);
+      }
+    },
+    // 提交一级评论
+    submit() {},
     doSend(content) {
       console.log("初始发送按钮点击事件：" + content);
     },

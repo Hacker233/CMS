@@ -9,9 +9,11 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "comment-message-editor": "^1.0.1",
     "core-js": "^3.6.5",
     "element-ui": "^2.4.5",
     "hbl-comment": "^1.2.3",
+    "message-tree": "^0.1.8",
     "moment": "^2.29.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",

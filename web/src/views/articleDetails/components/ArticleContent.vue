@@ -20,8 +20,15 @@
       </div>
     </header>
     <article class="content">
+      <!-- 文章标题 -->
       <h1 class="article-title">{{ articleItem.title }}</h1>
-      <section v-html="articleItem.content"></section>
+      <!-- 文章封面图 -->
+      <el-image
+        style="width: 100%;"
+        :src="articleItem.cover"
+      >
+      </el-image>
+      <section class="mt20" v-html="articleItem.content"></section>
     </article>
     <footer class="classify">
       <span class="tag-group__title">文章分类</span>

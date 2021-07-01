@@ -5,6 +5,7 @@ const Multer = require("multer");
 const user = require("./user");
 const menu = require("./menu");
 const article = require("./article");
+const comment = require("./comment");
 const category = require("./category");
 const upload = require("./upload");
 
@@ -26,6 +27,10 @@ router.get("/menu", menu.menu);
 router.get("/article/recommendedList", article.recommendedList); // 获取热门文章
 router.post("/article/publish", article.publish); // 发布文章
 router.get("/article/articleInfo", article.articleInfo); // 获取文章详情
+
+// 评论相关接口
+router.get("/comment/commentList", comment.commentList); // 获取评论列表
+router.post("/comment/addComment", comment.addComment); // 添加评论
 
 // 分类相关接口
 router.get("/category/categoryList", category.categoryList); // 获取分类列表

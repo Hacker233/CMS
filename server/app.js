@@ -75,6 +75,8 @@ app.use(
       "/article/recommendedList",
       "/user/emailCode",
       "/category/categoryList",
+      "/article/articleInfo",
+      "/comment/commentList",
     ], // 无需验证token
   })
 );
