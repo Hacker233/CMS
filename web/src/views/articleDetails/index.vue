@@ -25,7 +25,7 @@ import ArticleContent from "./components/ArticleContent"; // 文章详情
 import UserBox from "@/components/UserBox/UserBox"; // 用户卡片
 import HandleBox from "./components/HandleBox.vue"; // 点赞等操作浮窗
 import { getArticleInfo } from "@/service/api/article.js";
-import { getCommentList } from "@/service/api/comment.js";
+import { getCommentList, addComment } from "@/service/api/comment.js";
 export default {
   data() {
     return {
@@ -73,7 +73,19 @@ export default {
       }
     },
     // 提交一级评论
-    submit() {},
+    async submit(content) {
+      let params = {
+        article_id: this.$route.query.id,
+        content: content,
+      };
+      const data = await addComment(params);
+      if (data.code === "00000") {
+        this.$message.success("评论成功");
+        this.getCommentList();
+      } else {
+        this.$message.error(data.message);
+      }
+    },
     doSend(content) {
       console.log("初始发送按钮点击事件：" + content);
     },

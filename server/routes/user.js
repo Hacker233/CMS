@@ -16,7 +16,6 @@ const user = {
     });
     if (!user) {
       res.json(res.setUnifyResFormat("", "U0002", "用户名不存在!"));
-      return;
     } else {
       // 验证密码是否正确
       const isPasswordValid = await bcryptjs.compareSync(
@@ -25,7 +24,6 @@ const user = {
       );
       if (!isPasswordValid) {
         res.json(res.setUnifyResFormat("", "U0003", "密码错误!"));
-        return;
       }
     }
     // 生成token
@@ -66,7 +64,7 @@ const user = {
         // 保存用户
         user.save(async (err, doc) => {
           if (err) {
-            res.json(res.setUnifyResFormat("", "D0001", err));
+            res.json(res.setUnifyResFormat(null, "D0001", err));
           } else {
             Code.deleteMany({ e_mail }); // 删除验证码
             // 生成token

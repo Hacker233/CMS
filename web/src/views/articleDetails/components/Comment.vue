@@ -5,10 +5,8 @@
     <!-- 评论列表 -->
     <message-tree
       :data-list="commentList"
-      :defaultExpandLayer="2"
-      :renderLayer="2"
+      @on-reply="onReply"
     >
-      <!-- default slots of comment-editor -->
     </message-tree>
   </div>
 </template>
@@ -79,6 +77,11 @@ export default {
     // 提交一级评论
     submit(content) {
       this.$emit("submit", content);
+    },
+    // 回复
+    onReply(data) {
+      debugger
+      console.log(data);
     },
   },
 };
